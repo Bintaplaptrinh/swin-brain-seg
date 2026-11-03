@@ -39,6 +39,31 @@ flowchart LR
     M --> O[Native-size binary mask]
 ```
 
+## Two-Stage CADx Pipeline (Screening & Segmentation)
+
+The system provides an end-to-end Computer-Aided Diagnosis (CADx) inference pipeline combining Swin-based classification and segmentation:
+
+- **Stage 1: Screening Gating (`src/models/swin_classifier.py`)**:
+  - Architecture: **Swin Transformer V2-Tiny** (`swinv2_cr_tiny_ns_224`, ~27.57M parameters).
+  - Task: Binary classification (0: Healthy / No Tumor vs 1: Tumor detected).
+  - Performance: **100.0% Test Accuracy, 100.0% Sensitivity (0 False Negatives)** on the 1,000 BRISC 2025 test slices, with a latency of **3.13 ms/slice**.
+  - Logic: Slices with P(Tumor) < 0.40 are identified as healthy and early-exit immediately, saving 100% of downstream segmentation computation.
+- **Stage 2: Detailed Delineation (`src/models/swin_hybrid.py`)**:
+  - Architecture: **Swin Hybrid** (nnU-Net + Swin Transformer 2D, 38.8M parameters).
+  - Performance: **84.11% Test Dice, 74.78% Test IoU** (#1 benchmark rank).
+  - Output: Pixel-level binary mask, native resolution bounding box, and tumor area percentage.
+- **Unified Pipeline (`src/pipeline/cadx_pipeline.py`)**:
+  ```python
+  from src.pipeline import CADxPipeline
+
+  pipeline = CADxPipeline(
+      classifier_checkpoint="outputs/classifier/best_swinv2_tiny_binary.pt",
+      segmenter_checkpoint="outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/best.pt",
+      tokenizer_checkpoint="outputs/checkpoints/pretrained/model_swinvit.pt",
+  )
+  result = pipeline.predict("path/to/mri_slice.jpg")
+  ```
+
 ## Project layout
 
 ```text
@@ -53,11 +78,14 @@ configs/
 data/
   data/brisc2025/          # Original local dataset; excluded from Git
   processed/              # Optional derived data
+notebooks/
+  Kaggle_SwinV2_Classifier.ipynb # Standalone Kaggle training notebook for Swin Classifier
 src/
   __init__.py
   core/                   # Registry, YAML/JSON composition, portable paths
   datasets/               # BRISC dataset and Kaggle download
-  models/                 # Swin Hybrid and comparison architectures
+  models/                 # Swin Hybrid, Swin Transformer V2-Tiny classifier, comparison architectures
+  pipeline/               # Two-stage CADx end-to-end inference pipeline
   trainers/               # Training loops, loss, EMA, legacy policy utilities
   utils/                  # Metrics and evaluation utilities
 scripts/                  # Download, evaluation, export, profiling, verification
