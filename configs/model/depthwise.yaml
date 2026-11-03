@@ -1,0 +1,11 @@
+name: depthwise
+backbone:
+  type: nnUNetResEncDepthwise
+  features_per_stage: [32, 64, 128, 256, 320, 320]
+  blocks_per_stage: [1, 3, 4, 2, 2, 2]
+head:
+  type: UNetDecoder
+  segmentation_classes: 2
+options:
+  dw_kernel_size: 7
+  dw_dilation: 3

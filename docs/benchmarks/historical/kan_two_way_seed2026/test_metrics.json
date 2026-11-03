@@ -1,0 +1,153 @@
+{
+  "checkpoint": "D:\\Project\\Brain\\runs\\kan_two_way_seed2026\\best.pt",
+  "selected_epoch": 32,
+  "selection": "validation Weighted_mIoU",
+  "split": "test",
+  "smoke_test": false,
+  "evaluation_config": {
+    "data_root": "D:\\Project\\Brain\\dataset\\brisc2025",
+    "output": "D:\\Project\\Brain\\runs\\kan_two_way_seed2026",
+    "epochs": 50,
+    "batch_size": 16,
+    "size": 256,
+    "workers": 8,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "grad_clip": 12.0,
+    "val_fraction": 0.2,
+    "ema_decay_max": 0.9995,
+    "nsd_tolerance": 2.0,
+    "seed": 2026,
+    "device": "cuda",
+    "amp": true,
+    "deep_supervision": true,
+    "variant": "kan-two-way",
+    "groups": 8,
+    "num_basis": 4,
+    "attention_stages": [
+      4,
+      5,
+      6
+    ],
+    "attention_dim": 128,
+    "attention_heads": 8,
+    "attention_tokens": 16,
+    "attention_depth": 2,
+    "attention_dropout": 0.0,
+    "benchmark_warmup": 10,
+    "benchmark_steps": 50,
+    "resume": "D:\\Project\\Brain\\runs\\kan_two_way_seed2026\\last.pt",
+    "evaluate_only": false,
+    "smoke_test": false
+  },
+  "metric_protocol": {
+    "task": "binary foreground segmentation grouped by image-level tumor type",
+    "overlap": "mIoU and Dice are per-image means; Weighted_mIoU uses tumor image counts as weights",
+    "rates": "Recall/Precision/Specificity pool native-resolution pixel confusion counts; zero denominators are null",
+    "coordinates": "original image size after removing letterbox padding and bilinear logit restoration",
+    "distance_units": "native-image pixels, not mm; no physical spacing supplied",
+    "HD95": "max of two directed contour-length-weighted 95th percentiles (surface-distance)",
+    "ASSD": "pooled symmetric contour-length-weighted average distance",
+    "NSD": "contour-length-weighted surface Dice",
+    "NSD_tolerance_px": 2.0,
+    "empty_masks": "one empty: distances Infinity, NSD 0; both empty: IoU/Dice 1, boundary metrics null",
+    "aggregation": "boundary scores are per-image means; Infinity failures remain in headline means",
+    "patient_grouping": "unavailable; training/validation split is slice-level, stratified by tumor and plane"
+  },
+  "per_class": {
+    "Glioma": {
+      "images": 254,
+      "mIoU": 0.6724423725781368,
+      "Dice": 0.7625645018791569
+    },
+    "Meningioma": {
+      "images": 306,
+      "mIoU": 0.8958432846032098,
+      "Dice": 0.9406617515810222
+    },
+    "Pituitary": {
+      "images": 300,
+      "mIoU": 0.8023344409907306,
+      "Dice": 0.8787109377693074
+    }
+  },
+  "Weighted_mIoU": 0.797242720954242,
+  "overall": {
+    "images": 860,
+    "mIoU": 0.797242720954242,
+    "Dice": 0.866450186967315,
+    "Recall": 0.870181756260695,
+    "Precision": 0.9069362353964613,
+    "Specificity": 0.9984399423681588,
+    "micro_IoU": 0.7988505791310868,
+    "micro_Dice": 0.8881789164689399,
+    "HD95_px": 15.856245683629044,
+    "ASSD_px": 5.057653576468902,
+    "NSD": 0.7176472370609327,
+    "empty_predictions": 0,
+    "empty_targets": 0,
+    "both_empty": 0,
+    "undefined_distance_images": 0,
+    "infinite_distance_images": 0,
+    "confusion_pixels": {
+      "tp": 3117226,
+      "fp": 319869,
+      "fn": 465044,
+      "tn": 204716787
+    },
+    "HD95_finite_only_px": 15.856245683629044,
+    "ASSD_finite_only_px": 5.057653576468902
+  },
+  "per_plane": {
+    "Axial": {
+      "images": 346,
+      "mIoU": 0.7836024974438158,
+      "Dice": 0.8508733055192069
+    },
+    "Coronal": {
+      "images": 257,
+      "mIoU": 0.7975078346013061,
+      "Dice": 0.8703886110738965
+    },
+    "Sagittal": {
+      "images": 257,
+      "mIoU": 0.815341487986584,
+      "Dice": 0.8834829729037115
+    }
+  },
+  "efficiency": {
+    "parameters": 10349322,
+    "parameters_M": 10.349322,
+    "GFLOPs": 32.528941056,
+    "flop_convention": "PyTorch FlopCounterMode supported operators; multiply-add = 2 FLOPs",
+    "flop_limitation": "Partial operator count: excludes unregistered operations, including KAN exp/tanh and normalization. Not total arithmetic cost.",
+    "counted_flops_by_operator": {
+      "aten.convolution": 32298516480,
+      "aten.addmm": 141557760,
+      "aten._scaled_dot_product_efficient_attention": 22806528,
+      "aten.bmm": 66060288
+    },
+    "inference_ms_per_image": 23.495249999541556,
+    "inference_mean_ms_per_image": 24.15153799978725,
+    "inference_p95_ms_per_image": 26.662905000011953,
+    "input_shape": [
+      1,
+      1,
+      256,
+      256
+    ],
+    "batch_size": 1,
+    "amp": true,
+    "warmup": 10,
+    "timed_iterations": 50,
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3060",
+    "timing_scope": "Forward only; synchronized; excludes loading, preprocessing, native-size restoration and metric calculation",
+    "vram_scope": "PyTorch allocator on this device; training includes student, EMA and optimizer; excludes CUDA context and other processes",
+    "training_peak_allocated_MiB": 4092.396484375,
+    "training_peak_reserved_MiB": 4402.0,
+    "inference_baseline_allocated_MiB": 57.47119140625,
+    "inference_peak_allocated_MiB": 92.93310546875,
+    "inference_peak_reserved_MiB": 146.0
+  }
+}

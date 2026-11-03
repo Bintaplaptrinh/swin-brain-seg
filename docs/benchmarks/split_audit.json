@@ -1,0 +1,9 @@
+{
+  "same_ordered_membership": true,
+  "counts": {
+    "train": 3146,
+    "val": 787,
+    "test": 860
+  },
+  "splits_sha256": "61e77a093002643310c546dbde9687f5b1e36e3e49043fac271d0b24309712e2"
+}

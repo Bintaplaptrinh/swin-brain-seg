@@ -1,0 +1,10 @@
+torch>=2.3,!=2.9.*
+dynamic-network-architectures>=0.4.4,<0.5
+monai==1.6.1
+numpy>=1.24
+Pillow>=10
+scipy>=1.10,<2
+surface-distance==0.1
+tqdm>=4.66
+PyYAML>=6.0
+kagglehub>=0.3,<1

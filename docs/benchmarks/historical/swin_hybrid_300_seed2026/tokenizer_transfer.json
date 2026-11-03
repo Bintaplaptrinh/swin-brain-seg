@@ -1,0 +1,28 @@
+{
+  "source": "D:\\Project\\Brain\\architecture\\swinbrain\\Brain_Swin_UNETR.pth",
+  "sha256": "75756f5cd01970d7a6d2a004bd7e03bd5a24c0b6d03eb84df2a21abd46c8d13f",
+  "source_format": "3D, 3 input channels, feature_size=24",
+  "encoder_tensor_count": 126,
+  "converted_or_regenerated": {
+    "patch_embed.proj.weight": "sum depth kernel and input channels: constant-depth, repeated-grayscale projection",
+    "layers1.0.blocks.0.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+    "layers1.0.blocks.0.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+    "layers1.0.blocks.1.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+    "layers1.0.blocks.1.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+    "layers2.0.blocks.0.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+    "layers2.0.blocks.0.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+    "layers2.0.blocks.1.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+    "layers2.0.blocks.1.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+    "layers3.0.blocks.0.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+    "layers3.0.blocks.0.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+    "layers3.0.blocks.1.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+    "layers3.0.blocks.1.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+    "layers4.0.blocks.0.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+    "layers4.0.blocks.0.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+    "layers4.0.blocks.1.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+    "layers4.0.blocks.1.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)"
+  },
+  "unchanged_tensor_count": 109,
+  "frozen_parameters": 1988850,
+  "notes": "Swin encoder only; source convolution encoders/decoder/output are not used. This is an explicit 3D-to-2D transfer, not native 2D pretraining. Source training modalities/provenance cannot be established from the state dictionary."
+}

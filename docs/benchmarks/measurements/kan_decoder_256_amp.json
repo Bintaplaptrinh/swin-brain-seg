@@ -1,0 +1,29 @@
+{
+  "variant": "kan-decoder",
+  "device": "NVIDIA GeForce RTX 3060",
+  "torch": "2.10.0+cu130",
+  "cuda": "13.0",
+  "dynamic_network_architectures": "0.4.4",
+  "input_shape": [
+    1,
+    1,
+    256,
+    256
+  ],
+  "amp": true,
+  "groups": 8,
+  "num_basis": 4,
+  "deep_supervision": true,
+  "optimizer": "SGD(momentum=0.99)",
+  "warmup_steps": 3,
+  "measured_steps": 10,
+  "parameters": 9302538,
+  "median_step_ms": 55.594899999960035,
+  "min_step_ms": 54.398399999627145,
+  "max_step_ms": 87.68349999991187,
+  "peak_allocated_mib": 365.833984375,
+  "peak_reserved_mib": 394.0,
+  "final_loss": 1.2488763332366943,
+  "finite_gradients": true,
+  "scope": "Synthetic eager CE+Dice forward/backward/optimizer; excludes data loading and validation."
+}

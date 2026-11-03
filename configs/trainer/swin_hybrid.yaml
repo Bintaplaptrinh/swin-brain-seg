@@ -1,0 +1,23 @@
+epochs: 300
+batch_size: 2
+effective_batch: 16
+workers: 4
+optimizer:
+  name: AdamW
+  lr: 0.0003
+  weight_decay: 0.0001
+lr_scheduler:
+  name: cosine
+  minimum_lr_ratio: 0.01
+swin_lr_scale: 0.3
+grad_clip: 12.0
+max_vram_gb: 9.0
+augmentation: robust
+glioma_sampling_weight: 2.0
+pituitary_sampling_weight: 1.3
+ema_start: 20
+ema_decay_max: 0.9995
+early_start: 100
+patience: 50
+min_delta: 0.0001
+amp: true

@@ -1,0 +1,179 @@
+{
+  "architecture": "nnUNetSwinHybrid",
+  "selected_epoch": 73,
+  "selected_weights": "student",
+  "completed_epoch": 103,
+  "stop_reason": "early_stopping",
+  "smoke_test": false,
+  "selection": "validation glioma mIoU; test unused for tuning",
+  "parameter_counts": {
+    "total": 38874750,
+    "trainable": 36885900,
+    "frozen": 1988850
+  },
+  "tokenizer_transfer": {
+    "source": "D:\\Project\\Brain\\architecture\\swinbrain\\Brain_Swin_UNETR.pth",
+    "sha256": "75756f5cd01970d7a6d2a004bd7e03bd5a24c0b6d03eb84df2a21abd46c8d13f",
+    "source_format": "3D, 3 input channels, feature_size=24",
+    "encoder_tensor_count": 126,
+    "converted_or_regenerated": {
+      "patch_embed.proj.weight": "sum depth kernel and input channels: constant-depth, repeated-grayscale projection",
+      "layers1.0.blocks.0.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+      "layers1.0.blocks.0.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+      "layers1.0.blocks.1.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+      "layers1.0.blocks.1.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+      "layers2.0.blocks.0.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+      "layers2.0.blocks.0.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+      "layers2.0.blocks.1.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+      "layers2.0.blocks.1.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+      "layers3.0.blocks.0.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+      "layers3.0.blocks.0.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+      "layers3.0.blocks.1.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+      "layers3.0.blocks.1.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+      "layers4.0.blocks.0.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+      "layers4.0.blocks.0.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)",
+      "layers4.0.blocks.1.attn.relative_position_bias_table": "central depth-offset plane of 3D relative-position bias",
+      "layers4.0.blocks.1.attn.relative_position_index": "regenerated 2D relative-position index (nonlearned buffer)"
+    },
+    "unchanged_tensor_count": 109,
+    "frozen_parameters": 1988850,
+    "notes": "Swin encoder only; source convolution encoders/decoder/output are not used. This is an explicit 3D-to-2D transfer, not native 2D pretraining. Source training modalities/provenance cannot be established from the state dictionary."
+  },
+  "training_config": {
+    "data_root": "D:\\Project\\Brain\\dataset\\brisc2025",
+    "tokenizer_checkpoint": "D:\\Project\\Brain\\architecture\\swinbrain\\Brain_Swin_UNETR.pth",
+    "output": "D:\\Project\\Brain\\runs\\swin_hybrid_300_seed2026",
+    "epochs": 300,
+    "size": 256,
+    "batch_size": 16,
+    "effective_batch": 16,
+    "workers": 4,
+    "lr": 0.0003,
+    "weight_decay": 0.0001,
+    "grad_clip": 12.0,
+    "max_vram_gb": 9.0,
+    "seed": 2026,
+    "val_fraction": 0.2,
+    "augmentation": "robust",
+    "glioma_sampling_weight": 1.5,
+    "ema_start": 150,
+    "ema_decay_max": 0.9995,
+    "early_start": 50,
+    "patience": 30,
+    "min_delta": 0.0001,
+    "nsd_tolerance": 2.0,
+    "benchmark_warmup": 3,
+    "benchmark_steps": 20,
+    "device": "cuda",
+    "amp": true,
+    "resume": null,
+    "retry_empty_run": false,
+    "profile_only": false,
+    "profile_steps": 3,
+    "profile_output": "D:\\Project\\Brain\\storage\\hybrid_profile.json",
+    "smoke_test": false,
+    "architecture": "nnUNetSwinHybrid",
+    "kernel": 9,
+    "parameter_limit": 50000000,
+    "weight_ema": "disabled before ema_start",
+    "rl_enabled": false,
+    "policy_reward_holdout": false,
+    "loss": "dynamic alpha*Dice + beta*Focal + gamma*Boundary; gamma rises from .5 to 2 by epoch 150"
+  },
+  "efficiency": {
+    "parameters": 38874750,
+    "parameters_M": 38.87475,
+    "GFLOPs": 59.705948608,
+    "flop_convention": "PyTorch FlopCounterMode supported operators; multiply-add = 2 FLOPs",
+    "flop_limitation": "Partial operator count: excludes unregistered operations such as normalization and, in legacy KAN variants, exp/tanh. Not total arithmetic cost.",
+    "counted_flops_by_operator": {
+      "aten.convolution": 57070217216,
+      "aten.addmm": 1992360960,
+      "aten.bmm": 341380544,
+      "aten.mm": 301989888
+    },
+    "inference_ms_per_image": 27.295600000798004,
+    "inference_mean_ms_per_image": 29.033940000044822,
+    "inference_p95_ms_per_image": 38.18950499917264,
+    "input_shape": [
+      1,
+      1,
+      256,
+      256
+    ],
+    "batch_size": 1,
+    "amp": true,
+    "warmup": 3,
+    "timed_iterations": 20,
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3060",
+    "timing_scope": "Forward only; synchronized; excludes loading, preprocessing, native-size restoration and metric calculation",
+    "vram_scope": "PyTorch allocator on this device; training includes student, EMA and optimizer; excludes CUDA context and other processes",
+    "training_peak_allocated_MiB": 4260.15087890625,
+    "training_peak_reserved_MiB": 4606.0,
+    "inference_baseline_allocated_MiB": 216.16552734375,
+    "inference_peak_allocated_MiB": 331.29150390625,
+    "inference_peak_reserved_MiB": 350.0
+  },
+  "per_class": {
+    "Glioma": {
+      "images": 254,
+      "mIoU": 0.6737055822111048,
+      "Dice": 0.7646501861378122
+    },
+    "Meningioma": {
+      "images": 306,
+      "mIoU": 0.8977824921705624,
+      "Dice": 0.942065329892604
+    },
+    "Pituitary": {
+      "images": 300,
+      "mIoU": 0.7931864316924288,
+      "Dice": 0.8729438723139299
+    }
+  },
+  "Weighted_mIoU": 0.7951146395273736,
+  "overall": {
+    "images": 860,
+    "mIoU": 0.7951146395273735,
+    "Dice": 0.8655538371166512,
+    "Recall": 0.8709385389710993,
+    "Precision": 0.9031327180327983,
+    "Specificity": 0.9983679259770994,
+    "micro_IoU": 0.7965311898041949,
+    "micro_Dice": 0.8867435136386465,
+    "HD95_px": 17.41341637312672,
+    "ASSD_px": 5.205230406760804,
+    "NSD": 0.72264906345021,
+    "empty_predictions": 0,
+    "empty_targets": 0,
+    "both_empty": 0,
+    "undefined_distance_images": 0,
+    "infinite_distance_images": 0,
+    "confusion_pixels": {
+      "tp": 3119937,
+      "fp": 334635,
+      "fn": 462333,
+      "tn": 204702021
+    },
+    "HD95_finite_only_px": 17.41341637312672,
+    "ASSD_finite_only_px": 5.205230406760804
+  },
+  "per_plane": {
+    "Axial": {
+      "images": 346,
+      "mIoU": 0.7922848617075211,
+      "Dice": 0.858618180480744
+    },
+    "Coronal": {
+      "images": 257,
+      "mIoU": 0.7854162911620437,
+      "Dice": 0.860706019406327
+    },
+    "Sagittal": {
+      "images": 257,
+      "mIoU": 0.8086227276812988,
+      "Dice": 0.8797391536441893
+    }
+  }
+}

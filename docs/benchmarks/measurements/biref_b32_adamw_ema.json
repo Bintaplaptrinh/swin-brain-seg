@@ -1,0 +1,34 @@
+{
+  "variant": "biref",
+  "parameters": 8856396,
+  "parameter_limit": 10000000,
+  "input_shape": [
+    32,
+    1,
+    256,
+    256
+  ],
+  "amp": true,
+  "optimizer": "AdamW(lr=.001, weight_decay=.0001)",
+  "EMA_updates": 3,
+  "boundary_weight": 0.1,
+  "EMA_unique_tensor_updates": true,
+  "dw_options": {
+    "dw_kernel_size": 7,
+    "dw_dilation": 1
+  },
+  "biref_options": {
+    "biref_context": true,
+    "biref_detail": true,
+    "biref_boundary": true
+  },
+  "channels_last": false,
+  "cudnn_benchmark": true,
+  "elapsed_seconds_including_warmup": 17.0205363999994,
+  "final_loss": 1.7245773077011108,
+  "peak_allocated_GB": 6.2648448,
+  "peak_reserved_GB": 6.851395584,
+  "vram_budget_GB": 10,
+  "device": "NVIDIA GeForce RTX 3060",
+  "scope": "Synthetic train_epoch including student, AdamW, gradients, EMA, deep supervision and boundary loss; no dataset training. PyTorch memory excludes CUDA context and other processes."
+}

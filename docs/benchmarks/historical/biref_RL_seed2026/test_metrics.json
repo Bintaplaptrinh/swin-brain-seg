@@ -1,0 +1,183 @@
+{
+  "checkpoint": "D:\\Project\\Brain\\runs\\biref_RL_seed2026\\best.pt",
+  "selected_epoch": 46,
+  "selection": "validation glioma-miou",
+  "split": "test",
+  "smoke_test": false,
+  "glioma_objective": {
+    "target_mIoU": 0.8,
+    "observed_mIoU": 0.6791334555964089,
+    "target_met": false,
+    "accuracy_experiment": true
+  },
+  "evaluation_config": {
+    "data_root": "D:\\Project\\Brain\\dataset\\brisc2025",
+    "output": "D:\\Project\\Brain\\runs\\biref_RL_seed2026",
+    "epochs": 50,
+    "batch_size": 32,
+    "size": 256,
+    "workers": 8,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "grad_clip": 12.0,
+    "max_vram_gb": 10,
+    "augmentation": "robust",
+    "glioma_rl": false,
+    "glioma_policy": "standard",
+    "glioma_sampling_weight": 1.0,
+    "policy_reward_fraction": 0.0,
+    "rl_learning_rate": 0.1,
+    "rl_exploration": 0.2,
+    "rl_warmup": 3,
+    "boundary_weight": 0.1,
+    "val_fraction": 0.2,
+    "ema_decay_max": 0.9995,
+    "nsd_tolerance": 2.0,
+    "seed": 2026,
+    "selection_metric": "glioma-miou",
+    "device": "cuda",
+    "amp": true,
+    "deep_supervision": true,
+    "variant": "biref",
+    "ema_skip_stages": [
+      3,
+      4,
+      5
+    ],
+    "ema_skip_groups": 32,
+    "biref_context": true,
+    "biref_detail": true,
+    "biref_boundary": true,
+    "groups": 8,
+    "num_basis": 4,
+    "dw_kernel_size": 7,
+    "dw_dilation": 1,
+    "channels_last": false,
+    "cudnn_benchmark": true,
+    "attention_stages": [
+      4,
+      5,
+      6
+    ],
+    "attention_dim": 128,
+    "attention_heads": 8,
+    "attention_tokens": 16,
+    "attention_depth": 2,
+    "attention_dropout": 0.0,
+    "benchmark_warmup": 10,
+    "benchmark_steps": 50,
+    "resume": null,
+    "evaluate_only": false,
+    "smoke_test": false,
+    "glioma_miou_target": 0.8,
+    "parameter_limit": 10000000,
+    "ema_tensor_updates": "unique"
+  },
+  "metric_protocol": {
+    "task": "binary foreground segmentation grouped by image-level tumor type",
+    "overlap": "mIoU and Dice are per-image means; Weighted_mIoU uses tumor image counts as weights",
+    "rates": "Recall/Precision/Specificity pool native-resolution pixel confusion counts; zero denominators are null",
+    "coordinates": "original image size after removing letterbox padding and bilinear logit restoration",
+    "distance_units": "native-image pixels, not mm; no physical spacing supplied",
+    "HD95": "max of two directed contour-length-weighted 95th percentiles (surface-distance)",
+    "ASSD": "pooled symmetric contour-length-weighted average distance",
+    "NSD": "contour-length-weighted surface Dice",
+    "NSD_tolerance_px": 2.0,
+    "empty_masks": "one empty: distances Infinity, NSD 0; both empty: IoU/Dice 1, boundary metrics null",
+    "aggregation": "boundary scores are per-image means; Infinity failures remain in headline means",
+    "patient_grouping": "unavailable; training/validation split is slice-level, stratified by tumor and plane"
+  },
+  "per_class": {
+    "Glioma": {
+      "images": 254,
+      "mIoU": 0.6791334555964089,
+      "Dice": 0.7689340955231877
+    },
+    "Meningioma": {
+      "images": 306,
+      "mIoU": 0.9005434571991189,
+      "Dice": 0.9443418078305863
+    },
+    "Pituitary": {
+      "images": 300,
+      "mIoU": 0.7996134576755796,
+      "Dice": 0.8765675877217438
+    }
+  },
+  "Weighted_mIoU": 0.7999421313105722,
+  "overall": {
+    "images": 860,
+    "mIoU": 0.7999421313105722,
+    "Dice": 0.868893174157642,
+    "Recall": 0.8730790811412875,
+    "Precision": 0.9105040252970429,
+    "Specificity": 0.9985006534636421,
+    "micro_IoU": 0.804075439411511,
+    "micro_Dice": 0.8913989092094733,
+    "HD95_px": 14.97049152175647,
+    "ASSD_px": 4.7527820046628255,
+    "NSD": 0.7171673899928253,
+    "empty_predictions": 0,
+    "empty_targets": 0,
+    "both_empty": 0,
+    "undefined_distance_images": 0,
+    "infinite_distance_images": 0,
+    "confusion_pixels": {
+      "tp": 3127605,
+      "fp": 307421,
+      "fn": 454665,
+      "tn": 204729235
+    },
+    "HD95_finite_only_px": 14.97049152175647,
+    "ASSD_finite_only_px": 4.7527820046628255
+  },
+  "per_plane": {
+    "Axial": {
+      "images": 346,
+      "mIoU": 0.789516210055028,
+      "Dice": 0.8573320752618522
+    },
+    "Coronal": {
+      "images": 257,
+      "mIoU": 0.7942699396155332,
+      "Dice": 0.866758881208483
+    },
+    "Sagittal": {
+      "images": 257,
+      "mIoU": 0.8196507773029585,
+      "Dice": 0.8865922150365421
+    }
+  },
+  "efficiency": {
+    "parameters": 8856396,
+    "parameters_M": 8.856396,
+    "GFLOPs": 31.982184448,
+    "flop_convention": "PyTorch FlopCounterMode supported operators; multiply-add = 2 FLOPs",
+    "flop_limitation": "Partial operator count: excludes unregistered operations such as normalization and, in legacy KAN variants, exp/tanh. Not total arithmetic cost.",
+    "counted_flops_by_operator": {
+      "aten.convolution": 31982184448
+    },
+    "inference_ms_per_image": 10.493950001546182,
+    "inference_mean_ms_per_image": 10.917333999532275,
+    "inference_p95_ms_per_image": 14.25198500037368,
+    "input_shape": [
+      1,
+      1,
+      256,
+      256
+    ],
+    "batch_size": 1,
+    "amp": true,
+    "warmup": 10,
+    "timed_iterations": 50,
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3060",
+    "timing_scope": "Forward only; synchronized; excludes loading, preprocessing, native-size restoration and metric calculation",
+    "vram_scope": "PyTorch allocator on this device; training includes student, EMA and optimizer; excludes CUDA context and other processes",
+    "training_peak_allocated_MiB": 5974.62158203125,
+    "training_peak_reserved_MiB": 6534.0,
+    "inference_baseline_allocated_MiB": 34.52685546875,
+    "inference_peak_allocated_MiB": 70.98876953125,
+    "inference_peak_reserved_MiB": 92.0
+  }
+}

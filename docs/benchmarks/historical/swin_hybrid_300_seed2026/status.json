@@ -1,0 +1,11 @@
+{
+  "pid": 9488,
+  "updated_at": "2026-11-02T05:05:10.775698+07:00",
+  "phase": "completed",
+  "epoch": 103,
+  "stop_reason": "early_stopping",
+  "selected_epoch": 73,
+  "selected_weights": "student",
+  "test_glioma_mIoU": 0.6737055822111048,
+  "weighted_mIoU": 0.7951146395273736
+}

@@ -1,0 +1,17 @@
+name: brisc2025
+root: data/data/brisc2025
+kaggle_handle: briscdataset/brisc2025
+url: https://www.kaggle.com/datasets/briscdataset/brisc2025
+auto_download: true
+task: binary_segmentation
+mask_threshold: 128
+input:
+  size: 512
+  channels: 1
+  resize: aspect_preserving_bilinear_letterbox
+  normalization: nonzero_per_slice_zscore
+split:
+  validation_fraction: 0.2
+  seed: 2026
+  stratify: [tumor_type, plane]
+  grouping: slice  # Filenames do not expose patient IDs.

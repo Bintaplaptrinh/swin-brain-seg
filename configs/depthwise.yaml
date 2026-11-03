@@ -1,0 +1,6 @@
+defaults:
+  dataset: dataset/brisc2025_256.yaml
+  model: model/depthwise.yaml
+  trainer: trainer/baseline.yaml
+trainer:
+  selection_metric: glioma-miou

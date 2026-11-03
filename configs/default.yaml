@@ -1,0 +1,5 @@
+defaults:
+  dataset: dataset/brisc2025.yaml
+  model: model/swin_hybrid.yaml
+  trainer: trainer/swin_hybrid.yaml
+output: null  # outputs/runs/<timestamp>_swin_hybrid

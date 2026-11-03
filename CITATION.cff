@@ -1,0 +1,13 @@
+cff-version: 1.2.0
+message: "If you use this project, please cite this software and acknowledge the BRISC dataset and upstream methods."
+title: "Swin Hybrid for Brain Tumor Segmentation"
+type: software
+version: 0.1.0
+date-released: 2026-11-03
+authors:
+  - family-names: Tran
+    given-names: Manh Hung
+  - family-names: Nguyen
+    given-names: Phuoc Toan
+  - family-names: Nguyen
+    given-names: Huu Tuan Phat

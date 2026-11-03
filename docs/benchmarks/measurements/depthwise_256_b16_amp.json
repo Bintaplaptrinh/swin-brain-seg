@@ -1,0 +1,41 @@
+{
+  "variant": "depthwise",
+  "device": "NVIDIA GeForce RTX 3060",
+  "torch": "2.10.0+cu130",
+  "cuda": "13.0",
+  "dynamic_network_architectures": "0.4.4",
+  "input_shape": [
+    16,
+    1,
+    256,
+    256
+  ],
+  "amp": true,
+  "groups": 8,
+  "num_basis": 4,
+  "attention_enabled": false,
+  "depthwise_enabled": true,
+  "attention_stages": [
+    4,
+    5,
+    6
+  ],
+  "attention_dim": 128,
+  "attention_heads": 8,
+  "attention_tokens": 16,
+  "attention_depth": 2,
+  "attention_dropout": 0.0,
+  "deep_supervision": true,
+  "optimizer": "SGD(momentum=0.99)",
+  "warmup_steps": 1,
+  "measured_steps": 3,
+  "parameters": 8733066,
+  "median_step_ms": 207.16629999878933,
+  "min_step_ms": 206.9789999986824,
+  "max_step_ms": 220.72830000251997,
+  "peak_allocated_mib": 2101.54345703125,
+  "peak_reserved_mib": 2472.0,
+  "final_loss": 1.8574663400650024,
+  "finite_gradients": true,
+  "scope": "Synthetic eager CE+Dice forward/backward/optimizer; excludes data loading and validation."
+}

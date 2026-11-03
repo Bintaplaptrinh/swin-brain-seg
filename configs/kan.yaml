@@ -1,0 +1,4 @@
+defaults:
+  dataset: dataset/brisc2025_256.yaml
+  model: model/kan.yaml
+  trainer: trainer/baseline.yaml

@@ -1,0 +1,10 @@
+name: kan
+backbone:
+  type: nnUNetResEncKAN
+  features_per_stage: [32, 64, 128, 256, 320, 320]
+head:
+  type: UNetDecoder_with_KAN_skip_calibration
+  segmentation_classes: 2
+options:
+  groups: 8
+  num_basis: 4

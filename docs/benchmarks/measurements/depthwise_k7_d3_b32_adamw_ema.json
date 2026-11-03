@@ -1,0 +1,24 @@
+{
+  "input_shape": [
+    32,
+    1,
+    256,
+    256
+  ],
+  "kernel": [
+    7,
+    7
+  ],
+  "dilation": [
+    3,
+    3
+  ],
+  "optimizer": "AdamW",
+  "amp": true,
+  "ema_updates": 3,
+  "synthetic_steps": 3,
+  "final_loss": 1.5663704872131348,
+  "peak_allocated_mib": 5469.033203125,
+  "peak_reserved_mib": 6066.0,
+  "scope": "Bounded synthetic verification only; no dataset training run started"
+}

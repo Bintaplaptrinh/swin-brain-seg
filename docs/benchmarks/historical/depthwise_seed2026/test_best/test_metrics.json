@@ -1,0 +1,147 @@
+{
+  "checkpoint": "D:\\Project\\Brain\\outputs\\checkpoints\\depthwise_seed2026\\best.pt",
+  "selected_epoch": 37,
+  "selected_weights": "EMA",
+  "selection": "explicit checkpoint; no test-set tuning",
+  "split": "test",
+  "smoke_test": false,
+  "training_config": {
+    "data_root": "D:\\Project\\Brain\\data\\data\\brisc2025",
+    "output": "D:\\Project\\Brain\\runs\\depthwise_seed2026",
+    "epochs": 50,
+    "batch_size": 32,
+    "size": 256,
+    "workers": 8,
+    "lr": 0.001,
+    "weight_decay": 0.0001,
+    "grad_clip": 12.0,
+    "val_fraction": 0.2,
+    "ema_decay_max": 0.9995,
+    "nsd_tolerance": 2.0,
+    "seed": 2026,
+    "selection_metric": "glioma-miou",
+    "device": "cuda",
+    "amp": true,
+    "deep_supervision": true,
+    "variant": "depthwise",
+    "groups": 8,
+    "num_basis": 4,
+    "attention_stages": [
+      4,
+      5,
+      6
+    ],
+    "attention_dim": 128,
+    "attention_heads": 8,
+    "attention_tokens": 16,
+    "attention_depth": 2,
+    "attention_dropout": 0.0,
+    "benchmark_warmup": 10,
+    "benchmark_steps": 50,
+    "resume": null,
+    "evaluate_only": false,
+    "smoke_test": false,
+    "glioma_miou_target": 0.8,
+    "tokenizer_checkpoint": "D:\\Project\\Brain\\outputs\\checkpoints\\pretrained\\Brain_Swin_UNETR.pth"
+  },
+  "evaluation_config": {
+    "size": 256,
+    "device": "cuda",
+    "batch_size": 2,
+    "amp": true,
+    "workers": 0
+  },
+  "per_class": {
+    "Glioma": {
+      "images": 254,
+      "mIoU": 0.6579236628941408,
+      "Dice": 0.7473058783597161
+    },
+    "Meningioma": {
+      "images": 306,
+      "mIoU": 0.8958825880628462,
+      "Dice": 0.9416532291216175
+    },
+    "Pituitary": {
+      "images": 300,
+      "mIoU": 0.7940640520422111,
+      "Dice": 0.8720385004866054
+    }
+  },
+  "Weighted_mIoU": 0.7900836022500071,
+  "overall": {
+    "images": 860,
+    "mIoU": 0.7900836022500068,
+    "Dice": 0.8599687573960052,
+    "Recall": 0.8618063406722553,
+    "Precision": 0.911496993930583,
+    "Specificity": 0.998538027268646,
+    "micro_IoU": 0.7952603639128827,
+    "micro_Dice": 0.8859554635067671,
+    "HD95_px": "Infinity",
+    "ASSD_px": "Infinity",
+    "NSD": 0.7086910455841918,
+    "empty_predictions": 2,
+    "empty_targets": 0,
+    "both_empty": 0,
+    "undefined_distance_images": 0,
+    "infinite_distance_images": 2,
+    "confusion_pixels": {
+      "tp": 3087223,
+      "fp": 299758,
+      "fn": 495047,
+      "tn": 204736898
+    },
+    "HD95_finite_only_px": 16.699293188603917,
+    "ASSD_finite_only_px": 5.3401671437407865
+  },
+  "per_plane": {
+    "Axial": {
+      "images": 346,
+      "mIoU": 0.7786087968461124,
+      "Dice": 0.8470505324540946
+    },
+    "Coronal": {
+      "images": 257,
+      "mIoU": 0.7917463189266349,
+      "Dice": 0.8654912391197859
+    },
+    "Sagittal": {
+      "images": 257,
+      "mIoU": 0.8038694562727856,
+      "Dice": 0.8718381271504387
+    }
+  },
+  "efficiency": {
+    "parameters": 8733066,
+    "parameters_M": 8.733066,
+    "GFLOPs": 31.844220928,
+    "flop_convention": "PyTorch FlopCounterMode supported operators; multiply-add = 2 FLOPs",
+    "flop_limitation": "Partial operator count: excludes unregistered operations such as normalization and, in legacy KAN variants, exp/tanh. Not total arithmetic cost.",
+    "counted_flops_by_operator": {
+      "aten.convolution": 31844220928
+    },
+    "inference_ms_per_image": 12.192649999633431,
+    "inference_mean_ms_per_image": 13.589829999546055,
+    "inference_p95_ms_per_image": 18.444479998288443,
+    "input_shape": [
+      1,
+      1,
+      256,
+      256
+    ],
+    "batch_size": 1,
+    "amp": true,
+    "warmup": 3,
+    "timed_iterations": 20,
+    "device": "cuda",
+    "device_name": "NVIDIA GeForce RTX 3060",
+    "timing_scope": "Forward only; synchronized; excludes loading, preprocessing, native-size restoration and metric calculation",
+    "vram_scope": "PyTorch allocator on this device; training includes student, EMA and optimizer; excludes CUDA context and other processes",
+    "training_peak_allocated_MiB": 4195.072265625,
+    "training_peak_reserved_MiB": 4804.0,
+    "inference_baseline_allocated_MiB": 33.587890625,
+    "inference_peak_allocated_MiB": 85.97216796875,
+    "inference_peak_reserved_MiB": 112.0
+  }
+}

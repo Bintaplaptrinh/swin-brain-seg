@@ -1,0 +1,9 @@
+Swin/nnU-Net hybrid: early_stopping after 103 epochs.
+Selected student epoch 73; validation glioma mIoU 0.73369.
+Test Glioma: mIoU 0.67371, Dice 0.76465
+Test Meningioma: mIoU 0.89778, Dice 0.94207
+Test Pituitary: mIoU 0.79319, Dice 0.87294
+Test Weighted mIoU: 0.79511.
+Parameters: {'total': 38874750, 'trainable': 36885900, 'frozen': 1988850}.
+Glioma target >=0.8: False.
+3D checkpoint was explicitly transferred to a frozen 2D tokenizer; source training provenance is unverified.

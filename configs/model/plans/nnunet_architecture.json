@@ -1,0 +1,26 @@
+{
+  "network_class_name": "src.models.nnunet_resenc_kan.nnUNetResEncKAN",
+  "arch_kwargs": {
+    "n_stages": 6,
+    "features_per_stage": [32, 64, 128, 256, 320, 320],
+    "conv_op": "torch.nn.Conv2d",
+    "kernel_sizes": [[3, 3], [3, 3], [3, 3], [3, 3], [3, 3], [3, 3]],
+    "strides": [[1, 1], [2, 2], [2, 2], [2, 2], [2, 2], [2, 2]],
+    "n_blocks_per_stage": [1, 3, 4, 2, 2, 2],
+    "n_conv_per_stage_decoder": [1, 1, 1, 1, 1],
+    "conv_bias": true,
+    "norm_op": "torch.nn.InstanceNorm2d",
+    "norm_op_kwargs": {"eps": 1e-5, "affine": true},
+    "dropout_op": null,
+    "dropout_op_kwargs": null,
+    "nonlin": "torch.nn.LeakyReLU",
+    "nonlin_kwargs": {"negative_slope": 0.01, "inplace": true},
+    "kan_groups": 8,
+    "num_basis": 4,
+    "kan_expansion": 1,
+    "skip_kan_stages": [3, 4],
+    "decoder_kan_stages": [],
+    "use_kan_encoder": true
+  },
+  "_kw_requires_import": ["conv_op", "norm_op", "dropout_op", "nonlin"]
+}

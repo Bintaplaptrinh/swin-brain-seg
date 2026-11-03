@@ -1,0 +1,63 @@
+{
+  "per_class": {
+    "Glioma": {
+      "images": 230,
+      "mIoU": 0.7013061421207666,
+      "Dice": 0.7959021715001374
+    },
+    "Meningioma": {
+      "images": 266,
+      "mIoU": 0.88956403037253,
+      "Dice": 0.9371251180746717
+    },
+    "Pituitary": {
+      "images": 291,
+      "mIoU": 0.8104466281397446,
+      "Dice": 0.8871883976434375
+    }
+  },
+  "Weighted_mIoU": 0.8052915038825095,
+  "overall": {
+    "images": 787,
+    "mIoU": 0.8052915038825095,
+    "Dice": 0.8773883158413399,
+    "Recall": 0.8710701527254107,
+    "Precision": 0.9121909129367752,
+    "Specificity": 0.9986198409728768,
+    "micro_IoU": 0.803680920071235,
+    "micro_Dice": 0.891156424762196,
+    "HD95_px": 15.729282371495154,
+    "ASSD_px": 4.0412215628918755,
+    "NSD": 0.7152501986269231,
+    "empty_predictions": 0,
+    "empty_targets": 0,
+    "both_empty": 0,
+    "undefined_distance_images": 0,
+    "infinite_distance_images": 0,
+    "confusion_pixels": {
+      "tp": 2885061,
+      "fp": 277721,
+      "fn": 427027,
+      "tn": 200946192
+    },
+    "HD95_finite_only_px": 15.729282371495154,
+    "ASSD_finite_only_px": 4.0412215628918755
+  },
+  "per_plane": {
+    "Axial": {
+      "images": 249,
+      "mIoU": 0.7978206957184387,
+      "Dice": 0.8699074941166164
+    },
+    "Coronal": {
+      "images": 273,
+      "mIoU": 0.7924880429143493,
+      "Dice": 0.869152125354937
+    },
+    "Sagittal": {
+      "images": 265,
+      "mIoU": 0.8255012249284014,
+      "Dice": 0.8929022955101857
+    }
+  }
+}

@@ -1,0 +1,15 @@
+epochs: 50
+batch_size: 32
+workers: 8
+optimizer:
+  name: AdamW
+  lr: 0.001
+  weight_decay: 0.0001
+lr_scheduler:
+  name: cosine
+  minimum_lr_ratio: 0.01
+grad_clip: 12.0
+max_vram_gb: 10.0
+augmentation: legacy
+ema_decay_max: 0.9995
+amp: true
