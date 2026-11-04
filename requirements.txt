@@ -8,3 +8,4 @@ surface-distance==0.1
 tqdm>=4.66
 PyYAML>=6.0
 kagglehub>=0.3,<1
+timm>=1.0,<2

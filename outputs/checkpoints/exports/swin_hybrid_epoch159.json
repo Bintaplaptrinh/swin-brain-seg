@@ -1,0 +1,33 @@
+{
+  "format": "brain-swin-hybrid-onnx-v1",
+  "protocol": "swin_hybrid_512_unfrozen_v2",
+  "checkpoint": "D:\\Project\\Brain\\outputs\\checkpoints\\swin_hybrid_512_unfrozen_seed2026\\last.pt",
+  "checkpoint_sha256": "fa39c3ee48a806e1dd797995587a75f80b9647c184de926fc98613a695868e27",
+  "model_sha256": "627b08f5a6a8952b458da16f93348bff1f35f2586f280f57ff971dfe7c8993b6",
+  "epoch": 159,
+  "weights": "EMA",
+  "size": 512,
+  "input": "image",
+  "output": "logits",
+  "input_shape": [
+    1,
+    1,
+    512,
+    512
+  ],
+  "output_shape": [
+    1,
+    2,
+    512,
+    512
+  ],
+  "precision": "float32",
+  "preprocessing": "Pillow-compatible grayscale/antialiased bilinear letterbox; nonzero per-slice zscore",
+  "postprocessing": "crop letterbox; bilinear restore logits (align_corners=false); argmax; PNG 0/255",
+  "validation": {
+    "real_test_input": "brisc2025_test_00001_gl_ax_t1.jpg",
+    "max_abs_logit_error": 0.0004572868347167969,
+    "argmax_agreement": 1.0,
+    "onnxruntime": "1.24.4"
+  }
+}

@@ -39,7 +39,7 @@ def main():
     if not runtime.exists():
         runtime = next((Path(ort.__file__).parent / "capi").glob("libonnxruntime.so*"))
     subprocess.run([str(cli.binary), "--model", str(cli.model), "--input", str(cases),
-                    "--output", str(masks), "--ort-dylib", str(runtime), "--dump-input"], check=True)
+                    "--output", str(masks), "--ort-dylib", str(runtime), "--segment-only", "--dump-input"], check=True)
     settings = ort.SessionOptions()
     settings.intra_op_num_threads = 4
     session = ort.InferenceSession(str(cli.model), sess_options=settings, providers=["CPUExecutionProvider"])

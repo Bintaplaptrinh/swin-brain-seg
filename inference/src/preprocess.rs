@@ -83,10 +83,8 @@ pub fn resize_bilinear(image: &GrayImage, width: usize, height: usize) -> Vec<u8
     result
 }
 
-pub fn prepare(image: &GrayImage, size: usize) -> (Vec<f32>, Geometry) {
-    let g = Geometry::new(image.width() as usize, image.height() as usize, size);
-    let resized = resize_bilinear(image, g.resized_width, g.resized_height);
-    let values: Vec<f32> = resized.iter().map(|p| *p as f32 / 255.).collect();
+fn normalize_foreground(resized: Vec<u8>) -> Vec<f32> {
+    let values: Vec<f32> = resized.into_iter().map(|p| p as f32 / 255.).collect();
     let nonzero: Vec<f64> = values
         .iter()
         .filter(|v| **v > 0.)
@@ -97,14 +95,37 @@ pub fn prepare(image: &GrayImage, size: usize) -> (Vec<f32>, Geometry) {
     let std = (nonzero.iter().map(|v| (v - mean).powi(2)).sum::<f64>() / count)
         .sqrt()
         .max(1e-6);
+    values
+        .into_iter()
+        .map(|v| {
+            if v > 0. {
+                ((v as f64 - mean) / std) as f32
+            } else {
+                0.
+            }
+        })
+        .collect()
+}
+
+pub const CLASSIFIER_SIZE: usize = 224;
+
+pub fn prepare_classifier(image: &GrayImage) -> Vec<f32> {
+    let values = normalize_foreground(resize_bilinear(image, CLASSIFIER_SIZE, CLASSIFIER_SIZE));
+    [(0.485, 0.229), (0.456, 0.224), (0.406, 0.225)]
+        .into_iter()
+        .flat_map(|(mean, std)| values.iter().map(move |v| (v - mean) / std))
+        .collect()
+}
+
+pub fn prepare(image: &GrayImage, size: usize) -> (Vec<f32>, Geometry) {
+    let g = Geometry::new(image.width() as usize, image.height() as usize, size);
+    let values = normalize_foreground(resize_bilinear(image, g.resized_width, g.resized_height));
     let mut input = vec![0f32; size * size];
     for y in 0..g.resized_height {
-        for x in 0..g.resized_width {
-            let v = values[y * g.resized_width + x];
-            if v > 0. {
-                input[(y + g.top) * size + x + g.left] = ((v as f64 - mean) / std) as f32;
-            }
-        }
+        let source = y * g.resized_width;
+        let dest = (y + g.top) * size + g.left;
+        input[dest..dest + g.resized_width]
+            .copy_from_slice(&values[source..source + g.resized_width]);
     }
     (input, g)
 }

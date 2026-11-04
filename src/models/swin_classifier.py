@@ -19,7 +19,7 @@ Architecture:
 from __future__ import annotations
 
 import argparse
-import os
+import math
 import random
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Union
@@ -31,20 +31,42 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, Dataset
 import timm
 
+from src.core.paths import ROOT
+
 
 # ---------------------------------------------------------------------------
 # Default Constants
 # ---------------------------------------------------------------------------
 SEED = 2026
 DEFAULT_IMG_SIZE = 224
+DEFAULT_BACKBONE = "swinv2_cr_tiny_ns_224"
+DEFAULT_CLASSIFIER_THRESHOLD = 0.40
+DEFAULT_CLASSIFIER_CHECKPOINT = (
+    ROOT / "outputs/checkpoints/classifer_swinv2_tiny/classifer_swinv2_tiny_binary.pt"
+)
 IMAGENET_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_STD = [0.229, 0.224, 0.225]
 
 SWIN_BACKBONE_CANDIDATES = [
-    "swinv2_cr_tiny_ns_224",
+    DEFAULT_BACKBONE,
     "swin_tiny_patch4_window7_224",
     "swin_s3_tiny_224",
 ]
+
+
+def preprocess_classifier(img_pil: Image.Image, img_size: int = DEFAULT_IMG_SIZE) -> np.ndarray:
+    resized = img_pil.resize((img_size, img_size), Image.Resampling.BILINEAR)
+    arr = np.asarray(resized, dtype=np.float32) / 255.0
+
+    foreground = arr > 0
+    if foreground.any():
+        vals = arr[foreground]
+        arr[foreground] = (vals - vals.mean()) / max(float(vals.std()), 1e-6)
+
+    tensor_3c = np.stack([arr, arr, arr], axis=0)
+    for c in range(3):
+        tensor_3c[c] = (tensor_3c[c] - IMAGENET_MEAN[c]) / IMAGENET_STD[c]
+    return tensor_3c
 
 
 # ---------------------------------------------------------------------------
@@ -100,20 +122,6 @@ class SwinTumorDataset(Dataset):
         pos = sum(1 for _, lbl in self.samples if lbl == 1)
         return float(neg / max(pos, 1))
 
-    def _preprocess(self, img_pil: Image.Image) -> np.ndarray:
-        resized = img_pil.resize((self.img_size, self.img_size), Image.Resampling.BILINEAR)
-        arr = np.asarray(resized, dtype=np.float32) / 255.0
-
-        foreground = arr > 0
-        if foreground.any():
-            vals = arr[foreground]
-            arr[foreground] = (vals - vals.mean()) / max(float(vals.std()), 1e-6)
-
-        tensor_3c = np.stack([arr, arr, arr], axis=0)
-        for c in range(3):
-            tensor_3c[c] = (tensor_3c[c] - IMAGENET_MEAN[c]) / IMAGENET_STD[c]
-        return tensor_3c
-
     def _augment(self, img_pil: Image.Image) -> Image.Image:
         if random.random() < 0.5:
             img_pil = img_pil.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
@@ -136,7 +144,7 @@ class SwinTumorDataset(Dataset):
             img_l = img.convert("L")
         if self.augment:
             img_l = self._augment(img_l)
-        tensor_3c = self._preprocess(img_l)
+        tensor_3c = preprocess_classifier(img_l, self.img_size)
         return torch.from_numpy(tensor_3c).float(), torch.tensor(label, dtype=torch.float32)
 
 
@@ -200,7 +208,8 @@ class SwinTumorClassifier(nn.Module):
         self,
         img: Union[Image.Image, np.ndarray, Path, str],
         device: Optional[torch.device] = None,
-        threshold: float = 0.40,
+        threshold: float = DEFAULT_CLASSIFIER_THRESHOLD,
+        img_size: int = DEFAULT_IMG_SIZE,
     ) -> Dict[str, Any]:
         """Dự đoán nhị phân cho 1 lát cắt MRI: trả về P(Tumor) và cờ is_positive."""
         if device is None:
@@ -215,23 +224,14 @@ class SwinTumorClassifier(nn.Module):
         else:
             img_l = img.convert("L")
 
-        resized = img_l.resize((DEFAULT_IMG_SIZE, DEFAULT_IMG_SIZE), Image.Resampling.BILINEAR)
-        arr = np.asarray(resized, dtype=np.float32) / 255.0
-        foreground = arr > 0
-        if foreground.any():
-            vals = arr[foreground]
-            arr[foreground] = (vals - vals.mean()) / max(float(vals.std()), 1e-6)
-
-        tensor_3c = np.stack([arr, arr, arr], axis=0)
-        for c in range(3):
-            tensor_3c[c] = (tensor_3c[c] - IMAGENET_MEAN[c]) / IMAGENET_STD[c]
-
-        x_tensor = torch.from_numpy(tensor_3c).unsqueeze(0).float().to(device)
+        x_tensor = torch.from_numpy(preprocess_classifier(img_l, img_size)).unsqueeze(0).to(device)
 
         with torch.no_grad():
             logit = self.forward(x_tensor)
             prob = float(torch.sigmoid(logit).item())
-            has_tumor = bool(prob >= threshold)
+            if not math.isfinite(prob):
+                raise ValueError("Classifier produced a nonfinite tumor probability")
+            has_tumor = prob >= threshold
 
         return {
             "has_tumor": has_tumor,
@@ -245,7 +245,7 @@ class SwinTumorClassifier(nn.Module):
         p = Path(path)
         if not p.is_file():
             raise FileNotFoundError(f"Checkpoint không tồn tại: {p}")
-        state = torch.load(p, map_location="cpu")
+        state = torch.load(p, map_location="cpu", weights_only=True)
         if isinstance(state, dict) and "model" in state:
             state = state["model"]
         elif isinstance(state, dict) and "state_dict" in state:
@@ -267,6 +267,9 @@ def train_binary_swin(args: argparse.Namespace) -> None:
     print(f"Thiết bị huấn luyện: {device}")
 
     output_dir = Path(args.output)
+    save_path = output_dir / DEFAULT_CLASSIFIER_CHECKPOINT.name
+    if save_path.exists():
+        raise FileExistsError(f"Checkpoint already exists: {save_path}. Choose another --output.")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     train_ds = SwinTumorDataset(root=args.data_root, split="train", img_size=args.img_size, augment=True)
@@ -278,7 +281,7 @@ def train_binary_swin(args: argparse.Namespace) -> None:
     print(f"Dữ liệu: Train={len(train_ds)} ảnh, Test={len(test_ds)} ảnh")
     print(f"Phân bố nhãn Train: {train_ds.class_counts}")
 
-    model = SwinTumorClassifier(pretrained=True, dropout=args.dropout).to(device)
+    model = SwinTumorClassifier(pretrained=True, dropout=args.dropout, backbone_name=DEFAULT_BACKBONE).to(device)
     params_m = sum(p.numel() for p in model.parameters()) / 1e6
     print(f"Khởi tạo Swin Transformer V2-Tiny ({model.backbone_name}, {params_m:.2f}M tham số)")
 
@@ -311,7 +314,6 @@ def train_binary_swin(args: argparse.Namespace) -> None:
         if epoch % 3 == 0 or epoch == 1 or epoch == args.epochs:
             print(f"Epoch {epoch:2d}/{args.epochs} | Train Loss: {total_loss / len(train_ds):.4f}")
 
-    save_path = output_dir / "best_swinv2_tiny_binary.pt"
     torch.save(model.state_dict(), save_path)
     print(f"Huấn luyện hoàn tất. Đã lưu checkpoint tại: {save_path}")
 
@@ -327,7 +329,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--img-size", type=int, default=DEFAULT_IMG_SIZE)
     parser.add_argument("--workers", type=int, default=2)
     parser.add_argument("--seed", type=int, default=SEED)
-    parser.add_argument("--output", default="outputs/classifier")
+    parser.add_argument("--output", type=Path, default=DEFAULT_CLASSIFIER_CHECKPOINT.parent)
     return parser.parse_args()
 
 

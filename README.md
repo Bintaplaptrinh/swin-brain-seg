@@ -1,8 +1,8 @@
-# Swin Hybrid for Brain Tumor Segmentation
+# Brain Tumor CADx with Swin V2 and Swin Hybrid
 
 Swin Hybrid combines a trainable Swin Transformer with a six-stage nnU-Net residual encoder, multiscale feature fusion, depthwise refinement, and a detail-aware decoder for **binary brain tumor segmentation on 2D MRI slices**. The project includes reproducible training, KAN and depthwise comparison models, and a native **Rust inference application**.
 
-The retained Swin experiment completed **159 epochs**. Its final EMA checkpoint is the default deployment checkpoint. Validation selected EMA epoch **109** as the best checkpoint; both are retained. On the 860 supplied segmentation test images, weighted mIoU is **0.81146 for epoch 159** and **0.81465 for epoch 109**. The previously quoted **0.82642 is epoch 159 validation weighted mIoU**, not its test score. See [benchmark evidence](docs/benchmarks/README.md).
+The default Python and Rust pipelines use the final Swin Hybrid EMA weights from epoch 159. The validation-selected EMA from epoch 109 and the historical comparison experiments are documented in the [benchmark archive](docs/benchmarks/README.md).
 
 ## Architecture
 
@@ -39,30 +39,50 @@ flowchart LR
     M --> O[Native-size binary mask]
 ```
 
-## Two-Stage CADx Pipeline (Screening & Segmentation)
+## CADx inference flow
 
-The system provides an end-to-end Computer-Aided Diagnosis (CADx) inference pipeline combining Swin-based classification and segmentation:
+Each grayscale MRI slice goes through Swin Transformer V2-Tiny. A tumor probability below 0.40 returns a negative result immediately. At or above 0.40, Swin Hybrid restores the segmentation logits to the original image size and returns the tumor mask.
 
-- **Stage 1: Screening Gating (`src/models/swin_classifier.py`)**:
-  - Architecture: **Swin Transformer V2-Tiny** (`swinv2_cr_tiny_ns_224`, ~27.57M parameters).
-  - Task: Binary classification (0: Healthy / No Tumor vs 1: Tumor detected).
-  - Performance: **100.0% Test Accuracy, 100.0% Sensitivity (0 False Negatives)** on the 1,000 BRISC 2025 test slices, with a latency of **3.13 ms/slice**.
-  - Logic: Slices with P(Tumor) < 0.40 are identified as healthy and early-exit immediately, saving 100% of downstream segmentation computation.
-- **Stage 2: Detailed Delineation (`src/models/swin_hybrid.py`)**:
-  - Architecture: **Swin Hybrid** (nnU-Net + Swin Transformer 2D, 38.8M parameters).
-  - Performance: **84.11% Test Dice, 74.78% Test IoU** (#1 benchmark rank).
-  - Output: Pixel-level binary mask, native resolution bounding box, and tumor area percentage.
-- **Unified Pipeline (`src/pipeline/cadx_pipeline.py`)**:
-  ```python
-  from src.pipeline import CADxPipeline
+```mermaid
+flowchart LR
+    I[MRI slice] --> C[Swin V2-Tiny]
+    C -->|P tumor below 0.40| N[Negative result]
+    C -->|P tumor at least 0.40| S[Swin Hybrid]
+    S --> M[Positive result and native-size mask]
+```
 
-  pipeline = CADxPipeline(
-      classifier_checkpoint="outputs/classifier/best_swinv2_tiny_binary.pt",
-      segmenter_checkpoint="outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/best.pt",
-      tokenizer_checkpoint="outputs/checkpoints/pretrained/model_swinvit.pt",
-  )
-  result = pipeline.predict("path/to/mri_slice.jpg")
-  ```
+```python
+from src.pipeline import CADxPipeline
+
+pipeline = CADxPipeline()
+result = pipeline.predict("path/to/mri_slice.jpg")
+```
+
+```powershell
+python -m src.pipeline --image path/to/mri_slice.jpg --output-json report.json
+```
+
+The Python pipeline reads `outputs/checkpoints/classifer_swinv2_tiny/classifer_swinv2_tiny_binary.pt` and the saved evaluation weights in `outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt`. On a positive slice, `stage2_segmentation` contains the mask, tumor area and bounding box. On a negative slice, it is `None`.
+
+The [Kaggle training notebook](notebooks/Kaggle_SwinV2_Classifier.ipynb) writes the classifier checkpoint under `/kaggle/working/outputs/checkpoints/classifer_swinv2_tiny/`. Copy the checkpoint into the matching project directory for local inference. The local trainer (`python -m src.models.swin_classifier`) uses the same project directory by default. Use `--output` to train into a separate directory when a checkpoint already exists.
+
+## Inference checkpoints
+
+This repository stores the default inference weights in Git LFS. After cloning with Git LFS installed, run `git lfs pull` if the weights are still pointer files. Python uses the classifier PT, Swin Hybrid epoch 159 `last.pt`, and `Brain_Swin_UNETR.pth`. Rust uses the classifier and epoch 159 ONNX graphs and their adjacent checksum JSON files.
+
+## Rust desktop inference UI
+
+From the project root, build and launch the desktop interface. The local Python command locates the ONNX Runtime DLL installed with the development dependencies. You can also pass the DLL's path directly.
+
+```powershell
+cargo build --release --locked --features gui --manifest-path inference/Cargo.toml
+$ortDll = python -c "import pathlib,onnxruntime; print(pathlib.Path(onnxruntime.__file__).parent/'capi'/'onnxruntime.dll')"
+.\inference\target\release\brain-inference.exe --gui --ort-dylib $ortDll
+```
+
+Use **Kịch bản** to select one of four labeled BRISC test slices or **Mở ảnh JPG/PNG** to open a custom image. The top row shows the preprocessed input and the screening result, with a red overlay when the segmenter predicts tumor pixels. The bottom row shows the original and, for built-in cases, the BRISC label and green reference overlay. The three tumor types in the dropdown describe reference labels. Inference predicts tumor presence and a binary mask. **Bật CLAHE** applies an 8×8 tile contrast enhancement to the grayscale image before both models and defaults to off.
+
+The tumor examples were selected for irregular boundaries and Dice above 0.80. The no-tumor example has strong within-tissue intensity gradients. In the Rust CPU check, all four matched the binary screening label. Glioma, meningioma and pituitary had Dice **0.8897, 0.9375 and 0.9078** with CLAHE off and **0.8177, 0.9275 and 0.8718** with CLAHE on. These are selected demonstration cases.
 
 ## Project layout
 
@@ -91,6 +111,7 @@ src/
 scripts/                  # Download, evaluation, export, profiling, verification
 outputs/
   checkpoints/<run>/      # best.pt and last.pt
+  checkpoints/classifer_swinv2_tiny/ # Classifier checkpoint and ONNX export
   checkpoints/pretrained/ # Original Brain Swin initialization
   checkpoints/exports/    # ONNX graph and checksum/epoch metadata
   logs/<run>/             # Training history.jsonl and diagnostic logs
@@ -143,7 +164,7 @@ data/data/brisc2025/segmentation_task/
   test/images/    test/masks/
 ```
 
-There are **3,933 paired training images** and **860 paired test images**. A seed-2026 split stratified by tumor type and imaging plane gives **3,146 fitting / 787 validation** images. These are slice-level splits; patient IDs are unavailable. The classification task is separate; its 140 no-tumor test images are excluded from the headline segmentation comparison.
+There are **3,933 paired training images** and **860 paired test images**. A seed-2026 split stratified by tumor type and imaging plane gives **3,146 fitting / 787 validation** images. These are slice-level splits; patient IDs are unavailable. The end-to-end test adds 140 no-tumor images from the classification split. The evaluator verifies that the 860 tumor images are byte-identical across both splits.
 
 Images become grayscale, are resized with aspect-preserving bilinear interpolation and centered padding, and are normalized using the nonzero pixels of each slice. Foreground masks use `mask >= 128`. Padded target pixels are ignored. Evaluation removes padding, restores continuous logits to native image size, then applies argmax. Tumor-type scores group slices by filename labels; the network predicts a single binary tumor class.
 
@@ -194,36 +215,38 @@ The configuration loader supports `.yaml`, `.yml`, and `.json`, with relative se
 
 The deep-supervision objective is `alpha * Dice + beta * Focal + gamma * Boundary`. For progress `p = clamp((epoch - 1) / 149, 0, 1)`, alpha is 1, beta is `0.5 + 0.5p`, and gamma is `0.01 + 0.49p`. Losses ignore padding. Weight EMA is separate from Efficient Multi-Scale Attention and advances only after successful optimizer updates. Resume checkpoints include model, EMA, optimizer, scheduler, AMP scaler, splits, RNG, early stopping, and the current history row.
 
-## Benchmark results
+## Test results
 
-All rows use the same **860 segmentation test images**, native-resolution masks, no test-time augmentation, and no component filtering. Weighted mIoU is the mean foreground IoU per image, equivalently the tumor-type means weighted by their image counts. Dice is also an image mean.
+Both tests use the Swin Hybrid epoch 159 EMA checkpoint and evaluate masks at native resolution. mIoU and Dice are per-image means. HD95 and ASSD are measured in pixels, and NSD uses a two-pixel tolerance.
 
-| Model / weights | Epoch | Input | Parameters | Weighted mIoU | Glioma mIoU | Meningioma mIoU | Pituitary mIoU | Dice |
-|---|---:|---:|---:|---:|---:|---:|---:|---:|
-| Swin Hybrid, validation-selected EMA | 109 | 512² | 38,801,022 | **0.81465** | **0.70659** | **0.90876** | **0.81015** | **0.87959** |
-| Swin Hybrid, final EMA / default Rust export | 159 | 512² | 38,801,022 | 0.81146 | 0.70489 | 0.90494 | 0.80634 | 0.87722 |
-| KAN, validation-selected EMA | 54 | 256² | 8,916,618 | 0.79530 | 0.66709 | 0.89807 | 0.79902 | 0.86515 |
-| nnU-Net v2 + depthwise 7×7, validation-selected EMA | 23 | 256² | 8,804,746 | 0.79378 | 0.66223 | 0.89489 | 0.80202 | 0.86580 |
+### Segmentation model
 
-The depthwise row is this project's custom 2D residual nnU-Net architecture with depthwise convolution. It does **not** represent an independent run of the full official nnU-Net v2 automatic planning, cross-validation and ensemble pipeline. Swin uses higher resolution, more parameters, a different loss/training budget, and pretrained weights; these results are experiment comparisons rather than controlled single-component ablations. KAN selects by validation weighted mIoU; Swin and depthwise select by validation Glioma mIoU.
+Swin Hybrid ran on all 860 paired tumor slices using PyTorch CUDA AMP with batch size 2. [Local report](outputs/runs/cadx_segmenter_epoch159/test_metrics.json)
 
-| Model | Supported-operator GFLOPs | GPU forward median, ms/image | Training peak reserved, MiB |
-|---|---:|---:|---:|
-| Swin Hybrid epoch 109 | 237.777 | 49.814 | 3,088 |
-| Swin Hybrid epoch 159 | 237.777 | 49.599 | 3,088 |
-| KAN | 32.112 | 26.036 | 8,322 |
-| nnU-Net v2 + depthwise 7×7 | 31.903 | 11.323 | 6,064 |
+| Test subset | Images | mIoU | Dice | HD95 (px) | ASSD (px) | NSD |
+|---|---:|---:|---:|---:|---:|---:|
+| All tumor slices | 860 | **0.81146** | **0.87722** | 16.29043 | 4.68427 | 0.75194 |
+| Glioma | 254 | 0.70489 | 0.78904 | — | — | — |
+| Meningioma | 306 | 0.90494 | 0.94662 | — | — | — |
+| Pituitary | 300 | 0.80634 | 0.88108 | — | — | — |
 
-GPU timing is **PyTorch CUDA AMP, RTX 3060, batch 1, warmed-up synchronized forward passes**, excluding preprocessing, I/O, restoration and metrics. It is not Rust CPU latency. KAN/epoch-159 reports use 3 warmups and 20 iterations; original depthwise uses 10 warmups and 50 iterations. FLOPs count supported PyTorch operations with multiply-add = 2 and exclude unregistered operations such as normalization and KAN basis exponentiation. VRAM excludes CUDA context and other processes. Raw reports, per-image CSVs and protocol details are linked in [benchmark evidence](docs/benchmarks/README.md).
+### Full CADx system
 
-HD95/ASSD are in native pixels, since physical spacing is unavailable. NSD uses a two-pixel tolerance. One-empty-mask distances remain infinite; supplementary finite-only summaries do not replace the headline metrics.
+The Python inference pipeline ran in FP32 on CUDA with batch size 1. The test includes 860 paired tumor slices and 140 no-tumor slices with empty reference masks. An empty prediction paired with an empty reference scores 1 for IoU and Dice. [Local report](outputs/runs/cadx_system_epoch159/test_metrics.json)
+
+| Test subset | Images | Segmenter runs | mIoU | Dice | Nonempty predictions on no-tumor slices |
+|---|---:|---:|---:|---:|---:|
+| All slices | 1,000 | 860 | **0.83787** | **0.89442** | 0/140 |
+| Tumor slices | 860 | 860 | 0.81148 | 0.87723 | — |
+| No-tumor slices | 140 | 0 | 1.00000 | 1.00000 | 0/140 |
 
 ## Rust inference
 
-All inference application source files are Rust. The Python **export utility lives in `scripts/`**, alongside training tooling. It converts the checkpoint's saved evaluation weights to ONNX once; the Rust application then runs without Python or PyTorch. The default artifact uses **EMA epoch 159**.
+All inference application source files are Rust. The Python **export utility lives in `scripts/`**, alongside training tooling. Export both models to ONNX once so the Rust application can run with ONNX Runtime. The default segmenter uses **EMA epoch 159**.
 
 ```powershell
-# Already generated locally; run once on a fresh checkout with retained weights
+# Regenerate only if the ONNX files are absent
+python -m scripts.export_swin_classifier
 python -m scripts.export_swin_hybrid
 
 # Build with stable Rust; tested with rustc/cargo 1.96.1
@@ -235,7 +258,7 @@ $ortDll = python -c "import pathlib,onnxruntime; print(pathlib.Path(onnxruntime.
 .\inference\target\release\brain-inference.exe --input data/data/brisc2025/segmentation_task/test/images/brisc2025_test_00001_gl_ax_t1.jpg --output outputs/runs/predictions_example --ort-dylib $ortDll
 ```
 
-`--input` accepts one JPEG/PNG or a flat directory of images. Masks are native-size PNGs with 0 for background and 255 for tumor. Per-image JSON records the model, epoch, weights, dimensions, foreground count and timing. The application checks the ONNX SHA-256 against its adjacent JSON metadata and rejects existing output filenames. Move the executable, ONNX/JSON pair and a compatible ONNX Runtime library to another machine for deployment. `--ort-dylib` also accepts `libonnxruntime.so`/`.dylib`; alternatively configure `ORT_DYLIB_PATH`.
+`--input` accepts one JPEG/PNG or a flat directory of images. Masks are native-size PNGs with 0 for background and 255 for tumor. A negative slice gets an empty PNG and skips the segmenter. Per-image JSON records the screening result, whether segmentation ran, model weights, dimensions, foreground count and timing. The application checks both ONNX files against their adjacent JSON checksums and rejects existing output filenames. Deploy the executable with both ONNX/JSON pairs and a compatible ONNX Runtime library. Use `--classifier` to select another classifier export or `--segment-only` for segmentation benchmarks. `--ort-dylib` also accepts `libonnxruntime.so`/`.dylib`; alternatively configure `ORT_DYLIB_PATH`.
 
 To deploy the validation-selected checkpoint instead:
 
@@ -254,13 +277,12 @@ CPU inference is verified using ONNX Runtime **1.24.4**. CUDA inference is avail
 
 For the documented training configuration, use an **NVIDIA CUDA GPU with 12 GB VRAM or more**; the tested reference is an [RTX 3060 12 GB](https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3060-3060ti/). This is a recommendation based on the retained experiment and measured memory, not a minimum proven for every environment. Start Swin with physical batch 2/effective batch 16; reduce the physical batch to 1 if memory is constrained. KAN's retained batch-32 training reserved substantially more memory than this Swin configuration. Keep system RAM available for workers and checkpoint loading; reduce workers on constrained Windows hosts. CPU Rust inference is supported for deployment without a CUDA GPU.
 
-## Evaluation and verification
+## Reproducing the tests
 
 ```powershell
-# Re-evaluate any retained model on its saved test membership; choose a fresh output
-python -m scripts.evaluate_checkpoint --checkpoint outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt --output outputs/runs/evaluate_epoch159 --benchmark
-python -m scripts.evaluate_checkpoint --checkpoint outputs/checkpoints/kan_20261101_090911_204358/best.pt --output outputs/runs/evaluate_kan --benchmark
-python -m scripts.evaluate_checkpoint --checkpoint outputs/checkpoints/depthwise7_seed2026/best.pt --output outputs/runs/evaluate_depthwise --benchmark
+# Choose fresh output directories for repeated evaluations.
+python -m scripts.evaluate_checkpoint --checkpoint outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt --output outputs/runs/cadx_segmenter_repeat
+python -m scripts.evaluate_hybrid_checkpoint --checkpoint outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt --output outputs/runs/cadx_system_repeat --include-no-tumor --classifier-checkpoint outputs/checkpoints/classifer_swinv2_tiny/classifer_swinv2_tiny_binary.pt
 
 python -m pytest -q
 cargo test --locked --manifest-path inference/Cargo.toml

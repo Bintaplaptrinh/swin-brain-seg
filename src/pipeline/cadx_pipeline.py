@@ -5,26 +5,20 @@ Workflow:
         Input MRI slice -> Swin Transformer V2-Tiny binary classifier.
         Calculates P(Tumor).
         - If P(Tumor) < threshold (default 0.40):
-            Mark as Negative / No Tumor.
-            Pipeline halts immediately, saving compute and eliminating false positive masks.
+            Return the negative screening result and skip segmentation.
         - If P(Tumor) >= threshold:
             Mark as Positive / Tumor Detected.
             Proceeds to Stage 2.
 
     Stage 2 (Localization & Delineation):
         Input MRI slice -> Swin Hybrid (nnU-Net + Swin Transformer 2D).
-        Extracts pixel-accurate binary mask, unpads and restores to native slice dimensions,
-        and computes clinical metrics (area, percentage, bounding box).
+        Restores the segmentation logits to native slice dimensions and returns the binary
+        mask, foreground area, and bounding box.
 
 Usage:
     from src.pipeline import CADxPipeline
 
-    pipeline = CADxPipeline(
-        classifier_checkpoint="outputs/classifier/best_swinv2_tiny_binary.pt",
-        segmenter_checkpoint="outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/best.pt",
-        tokenizer_checkpoint="outputs/checkpoints/pretrained/model_swinvit.pt",
-        threshold=0.40,
-    )
+    pipeline = CADxPipeline()
     result = pipeline.predict("path/to/brain_mri.jpg")
 """
 
@@ -39,21 +33,20 @@ from typing import Any, Dict, Optional, Tuple, Union
 import numpy as np
 from PIL import Image
 import torch
+from torch.nn import functional as F
 
+from src.core.paths import ROOT, relocate_config
+from src.datasets.brisc import geometry
 from src.models.swin_classifier import (
+    DEFAULT_BACKBONE,
+    DEFAULT_CLASSIFIER_CHECKPOINT,
+    DEFAULT_CLASSIFIER_THRESHOLD,
     DEFAULT_IMG_SIZE,
-    IMAGENET_MEAN,
-    IMAGENET_STD,
     SwinTumorClassifier,
 )
 
 
-def geometry(height: int, width: int, size: int) -> Tuple[int, int, int, int]:
-    """Computes aspect-preserving letterbox dimensions and offsets."""
-    scale = min(size / height, size / width)
-    rh = max(1, round(height * scale))
-    rw = max(1, round(width * scale))
-    return rh, rw, (size - rh) // 2, (size - rw) // 2
+DEFAULT_SEGMENTER_CHECKPOINT = ROOT / "outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt"
 
 
 class CADxPipeline:
@@ -61,17 +54,21 @@ class CADxPipeline:
 
     def __init__(
         self,
-        classifier_checkpoint: Optional[Union[str, Path]] = None,
-        segmenter_checkpoint: Optional[Union[str, Path]] = None,
+        classifier_checkpoint: Union[str, Path] = DEFAULT_CLASSIFIER_CHECKPOINT,
+        segmenter_checkpoint: Optional[Union[str, Path]] = DEFAULT_SEGMENTER_CHECKPOINT,
         tokenizer_checkpoint: Optional[Union[str, Path]] = None,
-        threshold: float = 0.40,
+        threshold: float = DEFAULT_CLASSIFIER_THRESHOLD,
         device: Optional[str] = None,
         classifier_img_size: int = DEFAULT_IMG_SIZE,
-        segmenter_img_size: int = 512,
+        segmenter_img_size: Optional[int] = None,
     ):
         self.device = torch.device(
             device if device is not None else ("cuda" if torch.cuda.is_available() else "cpu")
         )
+        if not math.isfinite(threshold) or not 0 <= threshold <= 1:
+            raise ValueError("Classifier threshold must be between 0 and 1")
+        if classifier_checkpoint is None:
+            raise ValueError("A trained classifier checkpoint is required")
         self.threshold = threshold
         self.cls_size = classifier_img_size
         self.seg_size = segmenter_img_size
@@ -79,13 +76,14 @@ class CADxPipeline:
         # 1. Load Stage 1 Classifier (Swin Transformer V2-Tiny)
         self.classifier = SwinTumorClassifier(
             pretrained=False,
+            backbone_name=DEFAULT_BACKBONE,
             dropout=0.0,
             checkpoint_path=classifier_checkpoint,
         ).to(self.device).eval()
 
         # 2. Load Stage 2 Segmenter (optional if only screening is needed)
         self.segmenter = None
-        if segmenter_checkpoint is not None and Path(segmenter_checkpoint).is_file():
+        if segmenter_checkpoint is not None:
             self._load_segmenter(segmenter_checkpoint, tokenizer_checkpoint)
 
     def _load_segmenter(
@@ -93,51 +91,23 @@ class CADxPipeline:
         segmenter_checkpoint: Union[str, Path],
         tokenizer_checkpoint: Optional[Union[str, Path]],
     ) -> None:
-        try:
-            from src.models.swin_hybrid import nnUNetSwinHybrid
-        except ImportError as err:
-            print(f"Warning: Could not import nnUNetSwinHybrid ({err}). Segmenter disabled.")
-            return
+        from src.models.swin_hybrid import nnUNetSwinHybrid
 
-        seg_path = Path(segmenter_checkpoint)
-        ckpt = torch.load(seg_path, map_location="cpu", weights_only=False)
-
-        cfg = ckpt.get("config", {}) if isinstance(ckpt, dict) else {}
-        dw_kernel = cfg.get("dw_kernel_size", 3)
-
-        tok_ckpt = tokenizer_checkpoint or cfg.get("tokenizer_checkpoint")
-        if tok_ckpt is None or not Path(tok_ckpt).is_file():
-            print(f"Warning: Swin tokenizer checkpoint not found ({tok_ckpt}). Segmenter disabled.")
-            return
-
+        checkpoint = torch.load(segmenter_checkpoint, map_location="cpu", weights_only=True)
+        config = relocate_config(checkpoint.get("config", {}))
+        tok_ckpt = tokenizer_checkpoint or config["tokenizer_checkpoint"]
+        self.seg_size = self.seg_size or config.get("size", 512)
         model = nnUNetSwinHybrid(
             tokenizer_checkpoint=tok_ckpt,
-            deep_supervision=False,
-            depthwise_kernel=dw_kernel,
-            freeze_tokenizer=True,
+            depthwise_kernel=config.get("dw_kernel_size", 3),
             tokenizer_checkpointing=False,
         )
-
-        state = ckpt.get("model", ckpt)
-        filtered_state = {k: v for k, v in state.items() if not k.startswith("aux_heads.")}
-        model.load_state_dict(filtered_state, strict=False)
+        if "tokenizer_sha256" in checkpoint and model.tokenizer.audit["sha256"] != checkpoint["tokenizer_sha256"]:
+            raise ValueError("Tokenizer source differs from training")
+        state = checkpoint.get("evaluation_model", checkpoint.get("model", checkpoint))
+        model.load_state_dict(state, strict=True)
+        model.decoder.deep_supervision = False
         self.segmenter = model.to(self.device).eval()
-
-    def _preprocess_for_classifier(self, img_pil: Image.Image) -> torch.Tensor:
-        """Direct resize 224x224 and z-score normalization for classifier."""
-        resized = img_pil.resize((self.cls_size, self.cls_size), Image.Resampling.BILINEAR)
-        arr = np.asarray(resized, dtype=np.float32) / 255.0
-
-        foreground = arr > 0
-        if foreground.any():
-            vals = arr[foreground]
-            arr[foreground] = (vals - vals.mean()) / max(float(vals.std()), 1e-6)
-
-        tensor_3c = np.stack([arr, arr, arr], axis=0)
-        for c in range(3):
-            tensor_3c[c] = (tensor_3c[c] - IMAGENET_MEAN[c]) / IMAGENET_STD[c]
-
-        return torch.from_numpy(tensor_3c).unsqueeze(0).float().to(self.device)
 
     def _preprocess_for_segmenter(self, img_pil: Image.Image) -> Tuple[torch.Tensor, Tuple[int, int, int, int]]:
         """Letterbox padding to 512x512 and z-score normalization for segmenter."""
@@ -183,25 +153,21 @@ class CADxPipeline:
         # -------------------------------------------------------------
         # STAGE 1: Screening Gating (Swin Transformer V2-Tiny)
         # -------------------------------------------------------------
-        cls_input = self._preprocess_for_classifier(img_pil)
-        with torch.no_grad():
-            cls_out = self.classifier(cls_input)
-            tumor_prob = float(torch.sigmoid(cls_out.squeeze()).item())
-
-        is_positive = bool(tumor_prob >= self.threshold)
+        screening = self.classifier.predict_slice(img_pil, threshold=self.threshold, img_size=self.cls_size)
+        is_positive = screening["has_tumor"]
 
         result: Dict[str, Any] = {
             "source": source_name,
             "dimensions": (orig_w, orig_h),
             "stage1_screening": {
-                "tumor_probability": round(tumor_prob, 4),
+                "tumor_probability": screening["tumor_probability"],
                 "threshold": self.threshold,
                 "is_positive": is_positive,
                 "status": "POSITIVE (Có u)" if is_positive else "NEGATIVE (Không u / Não lành)",
                 "classifier_architecture": "Swin-Transformer-V2-Tiny",
             },
             "stage2_segmentation": None,
-            "diagnosis": "Não lành tính (No Tumor)" if not is_positive else "Phát hiện khối u - Đã phân đoạn",
+            "diagnosis": "Không phát hiện khối u" if not is_positive else "Phát hiện khối u",
         }
 
         # Early exit if negative
@@ -218,15 +184,12 @@ class CADxPipeline:
             return result
 
         seg_input, (rh, rw, top, left) = self._preprocess_for_segmenter(img_pil)
-        with torch.no_grad():
-            seg_logits = self.segmenter(seg_input)
-            seg_prob = torch.sigmoid(seg_logits).squeeze().cpu().numpy()
-
-        # Unpad letterbox back to native dimensions
-        cropped_prob = seg_prob[top:top + rh, left:left + rw]
-        prob_pil = Image.fromarray(cropped_prob).resize((orig_w, orig_h), Image.Resampling.BILINEAR)
-        native_prob = np.asarray(prob_pil, dtype=np.float32)
-        native_mask = (native_prob >= 0.50).astype(np.uint8)
+        with torch.inference_mode():
+            logits = self.segmenter(seg_input)
+            cropped = logits[:, :, top:top + rh, left:left + rw]
+            restored = F.interpolate(cropped.float(), size=(orig_h, orig_w), mode="bilinear", align_corners=False)
+            native_mask = restored.argmax(dim=1)[0].cpu().numpy().astype(np.uint8)
+            native_prob = restored.softmax(dim=1)[0, 1].cpu().numpy()
 
         # Compute clinical metrics
         tumor_pixel_count = int(native_mask.sum())
@@ -257,15 +220,15 @@ class CADxPipeline:
 def parse_arguments() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--image", required=True, help="Path to input brain MRI slice (.jpg, .png)")
-    parser.add_argument("--classifier-checkpoint", default="outputs/classifier/best_swinv2_tiny_binary.pt")
-    parser.add_argument("--segmenter-checkpoint", default="outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/best.pt")
-    parser.add_argument("--tokenizer-checkpoint", default="outputs/checkpoints/pretrained/model_swinvit.pt")
-    parser.add_argument("--threshold", type=float, default=0.40)
-    parser.add_argument("--output-json", default=None)
+    parser.add_argument("--classifier-checkpoint", type=Path, default=DEFAULT_CLASSIFIER_CHECKPOINT)
+    parser.add_argument("--segmenter-checkpoint", type=Path, default=DEFAULT_SEGMENTER_CHECKPOINT)
+    parser.add_argument("--tokenizer-checkpoint", type=Path, default=None)
+    parser.add_argument("--threshold", type=float, default=DEFAULT_CLASSIFIER_THRESHOLD)
+    parser.add_argument("--output-json", type=Path, default=None)
     return parser.parse_args()
 
 
-if __name__ == "__main__":
+def main() -> None:
     cli_args = parse_arguments()
     pipe = CADxPipeline(
         classifier_checkpoint=cli_args.classifier_checkpoint,
@@ -274,4 +237,16 @@ if __name__ == "__main__":
         threshold=cli_args.threshold,
     )
     res = pipe.predict(cli_args.image)
-    print(json.dumps({k: v for k, v in res.items() if k != "stage2_segmentation"}, indent=2))
+    segmentation = res["stage2_segmentation"]
+    if segmentation is not None:
+        res["stage2_segmentation"] = {
+            key: value for key, value in segmentation.items() if key not in {"mask", "probability_map"}
+        }
+    if cli_args.output_json:
+        report = json.dumps(res, ensure_ascii=False, indent=2)
+        cli_args.output_json.write_text(report + "\n", encoding="utf-8")
+    print(json.dumps(res, indent=2))
+
+
+if __name__ == "__main__":
+    main()

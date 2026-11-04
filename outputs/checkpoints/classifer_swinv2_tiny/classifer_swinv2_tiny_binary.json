@@ -1,0 +1,6 @@
+{
+  "format": "brain-swinv2-classifier-onnx-v1",
+  "model_sha256": "22bede4b09055ea6b997d9ba6057a352b3eac3a91cf3e2efdd451c16163cb27d",
+  "checkpoint_sha256": "9f9632383b4cf81889520fe49c7d8450759f968a3131ab55d09aed492cd46c4d",
+  "validation_max_abs_logit_error": 1.9073486328125e-06
+}
