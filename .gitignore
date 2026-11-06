@@ -23,3 +23,5 @@ outputs/runs/*/visualizations/
 .env.*
 !.env.example
 *.log
+
+inference/target/
