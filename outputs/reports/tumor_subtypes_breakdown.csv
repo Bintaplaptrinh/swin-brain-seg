@@ -1,0 +1,5 @@
+Tumor Subtype,Test Slices,Percentage (%),mIoU,Dice (%),Difficulty Level,Key Clinical Remark
+Glioma,254,29.53,0.70489,78.90,Highest (Infiltrative & irregular margins),Vượt trội hơn KAN (+3.78%) và Depthwise (+4.27%)
+Meningioma,306,35.58,0.90494,94.66,Medium (Well-circumscribed),Độ chính xác xuất sắc (>94.6% Dice)
+Pituitary,300,34.88,0.80634,88.11,Medium (Sellar region),Phân đoạn biên ổn định (>88.1% Dice)
+Overall (Weighted),860,100.00,0.81146,87.72,Multi-subtype Aggregate,Đạt chuẩn triển khai hệ thống CADx thực tế

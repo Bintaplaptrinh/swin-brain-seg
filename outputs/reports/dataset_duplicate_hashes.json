@@ -1,0 +1,552 @@
+{
+  "duplicates": {
+    "960155b05ea8f0ddcbcd3a5e29905c2a4b55832f03e5b7d6491c73955960d278": [
+      {
+        "file": "brisc2025_train_01210_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00344_me_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "622644677145b5202656ca1d281cc6680c12f440a077e4af7f5e85493a1b890f": [
+      {
+        "file": "brisc2025_train_01237_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_01648_me_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "1105b29d6d5b9c2a3c59314b8fc63c661df43e488beb0d996a1bea7079643b42": [
+      {
+        "file": "brisc2025_train_01238_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_train_01649_me_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      }
+    ],
+    "b53353cf2ca67b3a2cfc03843a14a774c08257de9a0f44f016f3c6650955a619": [
+      {
+        "file": "brisc2025_train_01239_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_01650_me_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "a75f3d6a34ffafc4fb88ae4bbd95408fbe07bae9404dcb2931fd9b557f786762": [
+      {
+        "file": "brisc2025_train_01240_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_train_01651_me_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "4951f7ba2e002020c835b3f50136c3249f3ae004624b35a262e65dd431d70e56": [
+      {
+        "file": "brisc2025_train_01246_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_01302_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "24f09f91af40e42f2798bbc29df353ce17e6a0c0b533fb923b2fa8f75df6b496": [
+      {
+        "file": "brisc2025_train_01247_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_train_01268_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_01386_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "2c8be230a33c267864fdce27d56db309cd612981d9bb68b2b3ce9b8f18e57c31": [
+      {
+        "file": "brisc2025_train_01251_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_train_01652_me_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "09b9031e30e757eb6e648686f0ca412357e86895ebbc52d300d2d0a9305fd417": [
+      {
+        "file": "brisc2025_train_01276_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_01277_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "f3d00bbb942117c2fb62466414d3c466ca283b678200fe87424e4128b80b2dba": [
+      {
+        "file": "brisc2025_train_01304_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_test_00352_me_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "db01a452cd2bc8950a03e6ea270b6b20e439fde923c9a2cd30b212f3443b698b": [
+      {
+        "file": "brisc2025_train_01442_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_01887_me_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      }
+    ],
+    "e2a955142f1b608205f3bc0ef078d801a644682d608e894950e2d1d85b543e75": [
+      {
+        "file": "brisc2025_train_01456_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_02286_me_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "6850de4414799ffeff8453156b05e59049870b1e0801f956558ca825482a3a13": [
+      {
+        "file": "brisc2025_train_01460_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_02310_me_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "d8934847ee16e6194ed30b5ba09727b530eaade5f8660632f768619a525a5bbd": [
+      {
+        "file": "brisc2025_train_01467_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_train_02365_me_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "aa050bde7cc73aaa0e59adc79f95ba3018346d444340ae65aef92add28224323": [
+      {
+        "file": "brisc2025_train_01469_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_02394_me_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "fce25282f9c298280721e6608db8dd49289984e7004b61c4dd142d442735ecce": [
+      {
+        "file": "brisc2025_train_01571_me_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_01997_me_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "e2c7bc9c2d735e5b584b329f5cda1aec1f2415b2972c4aa8efc8d0a61e61b280": [
+      {
+        "file": "brisc2025_train_01667_me_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_01668_me_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "451f339dbf4d33864e0dd8940f533bbeddda6492cf60bb15615342bd467cc721": [
+      {
+        "file": "brisc2025_train_02099_me_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_02100_me_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "39f4f7b252d7809d8d3d2e4521607de2195bf0f66c0592587b1cebd632aac640": [
+      {
+        "file": "brisc2025_train_03705_pi_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00737_pi_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "08690b76457b2b44d58682cece62ec951ef6d30d935ce07df852e97d44434680": [
+      {
+        "file": "brisc2025_train_03749_pi_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00751_pi_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "6c374ab41105e5927d08e15103c8c27416f8e7d03c15c03d104ace5b310bd0ed": [
+      {
+        "file": "brisc2025_train_03994_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_03995_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "8e2b4a6d3ce98d740a636942e40c14783eac078cf1758678c9d5aee948057aa7": [
+      {
+        "file": "brisc2025_train_04070_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04071_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "3e802dd22f483ce4d442fe2c7f1890c1c810ec8c1131b364fd4e4593bf0f268a": [
+      {
+        "file": "brisc2025_train_04176_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04177_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04178_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00825_pi_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "02799f7863d49de182357e72179f3cc4e65e70099355f2d5aa2e39d356e492d9": [
+      {
+        "file": "brisc2025_train_04194_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00827_pi_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "690ed9d73b96706b833cfbb95e40543fe022c7579ab74693873e2c26766c5efb": [
+      {
+        "file": "brisc2025_train_04201_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04202_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "b5e17076d1427e41a618f92bc72100c1be4df26608223512aac51c911ac1eb88": [
+      {
+        "file": "brisc2025_train_04218_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_test_00834_pi_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "c27c953b150b8cfa6c2820bac42a13a5d1b5b6420409973ba07a18542429afd5": [
+      {
+        "file": "brisc2025_train_04494_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04594_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      }
+    ],
+    "dea65808e631f46024aaa034984629ab8a455f2b951ca7022f12fa9e62b7c8ff": [
+      {
+        "file": "brisc2025_train_04550_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04551_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "8a4a14e666a67b90bf01bac1b85170bacf41fda33c7a7394d5e82e83c6f6f324": [
+      {
+        "file": "brisc2025_train_04596_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_train_04597_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      }
+    ],
+    "a1ee82164acd190067400d50f236fbb6004c0002fe3c09e4cf2d71752865140b": [
+      {
+        "file": "brisc2025_train_04647_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04648_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "8afa71fed3d0307237b24872056b750f3c06ee0d9527c35241b908eb7404080f": [
+      {
+        "file": "brisc2025_train_04676_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04677_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "7d0738e4f6493b449e20a147b80f674c589dc478dd6b5ccd4fb6ea1c329f0cfe": [
+      {
+        "file": "brisc2025_train_04741_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_train_04742_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04743_pi_sa_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      }
+    ],
+    "0de951286256834bd2ddc4e26fe9795265fc200a9f7c85af3fc707eb0bfc8803": [
+      {
+        "file": "brisc2025_test_00030_gl_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      },
+      {
+        "file": "brisc2025_test_00092_gl_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "86847c6a4729a4b19bf1b3f58905c68812c6f75ea680c0ccb1621b94e165d16f": [
+      {
+        "file": "brisc2025_test_00262_me_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      },
+      {
+        "file": "brisc2025_test_00275_me_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "94247e44617a135f0ce0ad29fcdff8c7bf484f3f2e4a9826c2ba4267709e5706": [
+      {
+        "file": "brisc2025_test_00361_me_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      },
+      {
+        "file": "brisc2025_test_00429_me_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "f55311fb8ccf1b86450233262bd00b176bd1c404e5849b59c0a3cd5e4440626b": [
+      {
+        "file": "brisc2025_test_00415_me_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      },
+      {
+        "file": "brisc2025_test_00416_me_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ]
+  },
+  "cross_trainpool_test": {
+    "960155b05ea8f0ddcbcd3a5e29905c2a4b55832f03e5b7d6491c73955960d278": [
+      {
+        "file": "brisc2025_train_01210_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00344_me_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "f3d00bbb942117c2fb62466414d3c466ca283b678200fe87424e4128b80b2dba": [
+      {
+        "file": "brisc2025_train_01304_me_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_test_00352_me_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "39f4f7b252d7809d8d3d2e4521607de2195bf0f66c0592587b1cebd632aac640": [
+      {
+        "file": "brisc2025_train_03705_pi_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00737_pi_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "08690b76457b2b44d58682cece62ec951ef6d30d935ce07df852e97d44434680": [
+      {
+        "file": "brisc2025_train_03749_pi_ax_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00751_pi_ax_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "3e802dd22f483ce4d442fe2c7f1890c1c810ec8c1131b364fd4e4593bf0f268a": [
+      {
+        "file": "brisc2025_train_04176_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04177_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_train_04178_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00825_pi_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "02799f7863d49de182357e72179f3cc4e65e70099355f2d5aa2e39d356e492d9": [
+      {
+        "file": "brisc2025_train_04194_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "train"
+      },
+      {
+        "file": "brisc2025_test_00827_pi_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ],
+    "b5e17076d1427e41a618f92bc72100c1be4df26608223512aac51c911ac1eb88": [
+      {
+        "file": "brisc2025_train_04218_pi_co_t1.jpg",
+        "dataset_folder": "train",
+        "checkpoint_split": "val"
+      },
+      {
+        "file": "brisc2025_test_00834_pi_co_t1.jpg",
+        "dataset_folder": "test",
+        "checkpoint_split": "test"
+      }
+    ]
+  }
+}

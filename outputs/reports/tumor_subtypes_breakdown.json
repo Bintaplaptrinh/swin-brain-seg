@@ -1,0 +1,42 @@
+{
+  "project": "Brain Tumor CADx with Swin V2 and Swin Hybrid",
+  "dataset": "BRISC 2025 Test Split",
+  "evaluation_scope": "Swin Hybrid Epoch 159 EMA on 860 native-resolution MRI slices",
+  "subtypes": [
+    {
+      "type": "Glioma",
+      "test_slices": 254,
+      "percentage_of_test": 29.53,
+      "mIoU": 0.70489255,
+      "dice": 0.78904129,
+      "difficulty": "Cao nhất do ranh giới u mờ nhạt, xâm lấn mô não và biến thiên hình thái lớn",
+      "clinical_notes": "Swin Hybrid đạt 70.49% mIoU vượt trội so với KAN (66.71%) và Depthwise (66.22%)"
+    },
+    {
+      "type": "Meningioma",
+      "test_slices": 306,
+      "percentage_of_test": 35.58,
+      "mIoU": 0.90493766,
+      "dice": 0.94662198,
+      "difficulty": "Trung bình do u màng não thường có bờ ranh giới rõ ràng",
+      "clinical_notes": "Độ chính xác phân đoạn đạt mức xuất sắc trên 94.6% Dice"
+    },
+    {
+      "type": "Pituitary",
+      "test_slices": 300,
+      "percentage_of_test": 34.88,
+      "mIoU": 0.80634490,
+      "dice": 0.88108250,
+      "difficulty": "Trung bình - u tuyến yên nằm ở vùng hố yên, kích thước đa dạng",
+      "clinical_notes": "Độ chính xác ổn định, đạt 88.11% Dice"
+    }
+  ],
+  "overall_summary": {
+    "total_tumor_slices": 860,
+    "weighted_miou": 0.81146175,
+    "overall_dice": 0.87721957,
+    "hd95_px": 16.29043,
+    "assd_px": 4.68427,
+    "nsd_tolerance_2px": 0.75194
+  }
+}

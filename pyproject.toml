@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "brain-swin-hybrid"
 version = "0.1.0"
-description = "Swin Hybrid brain tumor segmentation with nnU-Net and a Rust inference CLI"
+description = "Swin Hybrid brain tumor segmentation with nnU-Net and a Streamlit inference app"
 readme = "README.md"
 requires-python = ">=3.10"
 authors = [
@@ -22,7 +22,7 @@ dev = ["pytest>=8", "onnx>=1.17", "onnxruntime>=1.22,<2"]
 dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.packages.find]
-include = ["src*", "scripts*"]
+include = ["src*", "scripts*", "app_components*", "app_services*", "app_utils*", "app_views*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

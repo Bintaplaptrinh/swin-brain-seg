@@ -1,0 +1,74 @@
+{
+  "project": "Brain Tumor CADx with Swin V2 and Swin Hybrid",
+  "task": "Stage 2 Pixel-Level Binary Brain Tumor Segmentation",
+  "model": "Swin Hybrid (nnU-Net CNN + 2D Swin Transformer + EMA Attention)",
+  "checkpoint": "outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt (Epoch 159 EMA)",
+  "evaluated_slices": 860,
+  "pixel_confusion_matrix": {
+    "tp": 3204552,
+    "fp": 364945,
+    "fn": 377718,
+    "tn": 204671711,
+    "total_evaluated_pixels": 208618926,
+    "matrix_2x2": [
+      [
+        204671711,
+        364945
+      ],
+      [
+        377718,
+        3204552
+      ]
+    ],
+    "labels": {
+      "rows": [
+        "Actual Background Pixel",
+        "Actual Tumor Pixel"
+      ],
+      "cols": [
+        "Predicted Background Pixel",
+        "Predicted Tumor Pixel"
+      ]
+    }
+  },
+  "pixel_level_metrics": {
+    "pixel_precision": 0.8977601045749584,
+    "pixel_precision_percentage": "89.78%",
+    "pixel_recall_sensitivity": 0.8945590365885319,
+    "pixel_recall_percentage": "89.46%",
+    "pixel_specificity": 0.998220098751513,
+    "pixel_specificity_percentage": "99.82%",
+    "micro_iou": 0.8118513939575118,
+    "micro_dice": 0.8961567120405349
+  },
+  "per_image_segmentation_metrics": {
+    "weighted_miou": 0.81146175,
+    "overall_dice": 0.87721957,
+    "hd95_pixels": 16.29043,
+    "assd_pixels": 4.68427,
+    "nsd_tolerance_2px": 0.75194
+  },
+  "subtypes_performance": {
+    "Glioma": {
+      "slices": 254,
+      "miou": 0.70489255,
+      "dice": 0.78904129
+    },
+    "Meningioma": {
+      "slices": 306,
+      "miou": 0.90493766,
+      "dice": 0.94662198
+    },
+    "Pituitary": {
+      "slices": 300,
+      "miou": 0.8063449,
+      "dice": 0.8810825
+    }
+  },
+  "provenance": {
+    "source": "outputs/runs/cadx_segmenter_epoch159/test_per_image.csv",
+    "sha256": "0211f62a314d6a9c9f03268e84169d54972e277606d9a663e20a3233137a9a93",
+    "rows": 860,
+    "note": "Pixel counts summed from saved rows; no new model inference. Original overlap headline values retained."
+  }
+}

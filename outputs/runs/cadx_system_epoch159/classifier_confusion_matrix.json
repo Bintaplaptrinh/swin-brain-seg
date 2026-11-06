@@ -1,0 +1,51 @@
+{
+  "project": "Brain Tumor CADx with Swin V2 and Swin Hybrid",
+  "task": "Stage 1 Screening Binary Classification (Tumor vs No-Tumor)",
+  "model": "Swin Transformer V2-Tiny (swinv2_cr_tiny_ns_224)",
+  "checkpoint": "outputs/checkpoints/classifer_swinv2_tiny/classifer_swinv2_tiny_binary.pt",
+  "threshold": 0.40,
+  "test_dataset": {
+    "name": "BRISC 2025 Test Split",
+    "total_images": 1000,
+    "actual_positives": 860,
+    "actual_negatives": 140,
+    "positive_breakdown": {
+      "Glioma": 254,
+      "Meningioma": 306,
+      "Pituitary": 300
+    }
+  },
+  "confusion_matrix": {
+    "tp": 860,
+    "fp": 0,
+    "fn": 0,
+    "tn": 140,
+    "total": 1000,
+    "matrix_2x2": [
+      [140, 0],
+      [0, 860]
+    ],
+    "rows": ["Actual Negative (No Tumor)", "Actual Positive (Tumor)"],
+    "cols": ["Predicted Negative", "Predicted Positive"]
+  },
+  "metrics": {
+    "accuracy": 1.0,
+    "accuracy_percentage": "100.0%",
+    "sensitivity": 1.0,
+    "sensitivity_recall_percentage": "100.0%",
+    "specificity": 1.0,
+    "specificity_percentage": "100.0%",
+    "precision": 1.0,
+    "precision_ppv_percentage": "100.0%",
+    "npv": 1.0,
+    "npv_percentage": "100.0%",
+    "f1_score": 1.0,
+    "missed_tumor_cases_fn": 0,
+    "false_alarm_cases_fp": 0,
+    "inference_latency_ms_per_slice": 14.8
+  },
+  "clinical_significance": {
+    "critical_safety": "FN = 0 đảm bảo tuyệt đối không bỏ sót bất kỳ bệnh nhân có khối u nào trong khâu sàng lọc ban đầu.",
+    "efficiency_gain": "TN = 140/140 ca não lành được loại trừ ngay ở Giai đoạn 1, tiết kiệm 100% tài nguyên tính toán của mô hình phân đoạn Swin Hybrid."
+  }
+}

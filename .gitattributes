@@ -3,3 +3,6 @@ outputs/checkpoints/classifer_swinv2_tiny/classifer_swinv2_tiny_binary.onnx filt
 outputs/checkpoints/exports/swin_hybrid_epoch159.onnx filter=lfs diff=lfs merge=lfs -text
 outputs/checkpoints/pretrained/Brain_Swin_UNETR.pth filter=lfs diff=lfs merge=lfs -text
 outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt filter=lfs diff=lfs merge=lfs -text
+*.pt filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
+*.onnx filter=lfs diff=lfs merge=lfs -text
