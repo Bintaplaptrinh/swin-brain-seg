@@ -1,0 +1,104 @@
+{
+  "checkpoint": "outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt",
+  "epoch": 159,
+  "weights": "EMA",
+  "device": "cpu",
+  "precision": "FP32",
+  "force_segmentation": true,
+  "selection": "Three predefined GUI demonstration filenames, not a representative test sample",
+  "rows": [
+    {
+      "filename": "brisc2025_test_00162_gl_co_t1.jpg",
+      "image_path": "C:\\NAM4\\deeplearning\\Brain-Tumor-Segmentation-and-Classification-main\\brisc2025\\segmentation_task\\test\\images\\brisc2025_test_00162_gl_co_t1.jpg",
+      "mask_path": "C:\\NAM4\\deeplearning\\Brain-Tumor-Segmentation-and-Classification-main\\brisc2025\\segmentation_task\\test\\masks\\brisc2025_test_00162_gl_co_t1.png",
+      "image_sha256": "4dd61cc90b60cca324ca24532d3b45052e1086a7c14dc4698e5464081f59dd38",
+      "mask_sha256": "9ae6b5c1987309b283fbde0ec3cd542213f4666626f6afdfdf61dd102a1950d1",
+      "dimensions": [
+        512,
+        512
+      ],
+      "screening": {
+        "tumor_probability": 1.0,
+        "threshold": 0.4,
+        "is_positive": true,
+        "status": "POSITIVE (C\u00f3 u)",
+        "classifier_architecture": "Swin-Transformer-V2-Tiny"
+      },
+      "metrics": {
+        "tp": 2873,
+        "fp": 20,
+        "fn": 692,
+        "tn": 258559,
+        "iou": 0.80139470013947,
+        "dice": 0.8897491483431403,
+        "empty_prediction": false,
+        "empty_target": false,
+        "hd95": 4.47213595499958,
+        "assd": 1.5090176934418134,
+        "nsd": 0.7712538364279607
+      }
+    },
+    {
+      "filename": "brisc2025_test_00496_me_sa_t1.jpg",
+      "image_path": "C:\\NAM4\\deeplearning\\Brain-Tumor-Segmentation-and-Classification-main\\brisc2025\\segmentation_task\\test\\images\\brisc2025_test_00496_me_sa_t1.jpg",
+      "mask_path": "C:\\NAM4\\deeplearning\\Brain-Tumor-Segmentation-and-Classification-main\\brisc2025\\segmentation_task\\test\\masks\\brisc2025_test_00496_me_sa_t1.png",
+      "image_sha256": "159e9e1b466ff28cdc7d11c0e8127039e952abe343c59fa894e52153175ee68e",
+      "mask_sha256": "23f99778e2993c9ffff926d3f9c59f844208f13c65973932b47790ca942c088b",
+      "dimensions": [
+        512,
+        512
+      ],
+      "screening": {
+        "tumor_probability": 1.0,
+        "threshold": 0.4,
+        "is_positive": true,
+        "status": "POSITIVE (C\u00f3 u)",
+        "classifier_architecture": "Swin-Transformer-V2-Tiny"
+      },
+      "metrics": {
+        "tp": 5826,
+        "fp": 477,
+        "fn": 297,
+        "tn": 255544,
+        "iou": 0.8827272727272727,
+        "dice": 0.9377112506035732,
+        "empty_prediction": false,
+        "empty_target": false,
+        "hd95": 7.0,
+        "assd": 1.3904711593901453,
+        "nsd": 0.8353982468436465
+      }
+    },
+    {
+      "filename": "brisc2025_test_00835_pi_co_t1.jpg",
+      "image_path": "C:\\NAM4\\deeplearning\\Brain-Tumor-Segmentation-and-Classification-main\\brisc2025\\segmentation_task\\test\\images\\brisc2025_test_00835_pi_co_t1.jpg",
+      "mask_path": "C:\\NAM4\\deeplearning\\Brain-Tumor-Segmentation-and-Classification-main\\brisc2025\\segmentation_task\\test\\masks\\brisc2025_test_00835_pi_co_t1.png",
+      "image_sha256": "072eeee84d845fd213006173f6d01db3852dbdd3650fd230420740e3c1324226",
+      "mask_sha256": "d36c7f47b60c65f8fdfa598b69d59eb4b8633f24261b1451e30eccf243d0ef42",
+      "dimensions": [
+        512,
+        512
+      ],
+      "screening": {
+        "tumor_probability": 1.0,
+        "threshold": 0.4,
+        "is_positive": true,
+        "status": "POSITIVE (C\u00f3 u)",
+        "classifier_architecture": "Swin-Transformer-V2-Tiny"
+      },
+      "metrics": {
+        "tp": 2367,
+        "fp": 422,
+        "fn": 58,
+        "tn": 259297,
+        "iou": 0.8314014752370916,
+        "dice": 0.9079401611047181,
+        "empty_prediction": false,
+        "empty_target": false,
+        "hd95": 3.0,
+        "assd": 0.832026967578842,
+        "nsd": 0.9222035934394816
+      }
+    }
+  ]
+}

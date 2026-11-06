@@ -1,0 +1,70 @@
+{
+  "checkpoint": "outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt",
+  "selected_epoch": 159,
+  "selected_weights": "EMA",
+  "selection": "explicit final checkpoint epoch 159; native-resolution evaluation",
+  "split": "test",
+  "smoke_test": false,
+  "training_config": {
+    "model": "swin_hybrid",
+    "protocol": "swin_hybrid_512_unfrozen_v2",
+    "size": 512,
+    "parameters": 38801022,
+    "batch_size": 2,
+    "effective_batch": 16,
+    "optimizer": "AdamW",
+    "lr_cnn": 0.0003,
+    "lr_swin": 0.00009,
+    "seed": 2026
+  },
+  "evaluation_config": {
+    "size": 512,
+    "device": "cuda",
+    "batch_size": 2,
+    "amp": true,
+    "workers": 0
+  },
+  "per_class": {
+    "Glioma": {
+      "images": 254,
+      "mIoU": 0.7048925527242309,
+      "Dice": 0.7890412854192041
+    },
+    "Meningioma": {
+      "images": 306,
+      "mIoU": 0.904937660570299,
+      "Dice": 0.9466219803124803
+    },
+    "Pituitary": {
+      "images": 300,
+      "mIoU": 0.8063449038888849,
+      "Dice": 0.8810824981035214
+    }
+  },
+  "Weighted_mIoU": 0.8114617484803857,
+  "overall": {
+    "images": 860,
+    "mIoU": 0.8114617484803857,
+    "Dice": 0.8772195671786444,
+    "HD95_px": 16.29043,
+    "ASSD_px": 4.68427,
+    "NSD": 0.75194,
+    "empty_predictions": 0,
+    "empty_targets": 0,
+    "both_empty": 0,
+    "confusion_pixels": {
+      "tp": 3186412,
+      "fp": 287543,
+      "fn": 419256,
+      "tn": 204749189
+    },
+    "Recall": 0.883727,
+    "Precision": 0.917228,
+    "Specificity": 0.998598
+  },
+  "efficiency": {
+    "parameters": 38801022,
+    "supported_GFLOPs": 237.777270336,
+    "cuda_amp_forward_median_ms": 49.599250000028405
+  }
+}

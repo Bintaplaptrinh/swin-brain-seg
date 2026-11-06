@@ -1,4 +1,4 @@
-# Brain Tumor CADx with Swin V2 and Swin Hybrid
+# MRI: Brain Tumor CADx with Swin V2 and Swin Hybrid
 
 Swin Hybrid combines a trainable Swin Transformer with a six-stage nnU-Net residual encoder, multiscale feature fusion, depthwise refinement, and a detail-aware decoder for **binary brain tumor segmentation on 2D MRI slices**. The project includes reproducible training, KAN and depthwise comparison models, and a native **Rust inference application**.
 
@@ -311,3 +311,8 @@ If you use this code, architecture or checkpoints, please cite this project usin
 ```
 
 References and acknowledgments: [Swin Transformer](https://arxiv.org/abs/2103.14030), [nnU-Net](https://github.com/MIC-DKFZ/nnUNet), [MONAI](https://github.com/Project-MONAI/MONAI), [Efficient Multi-Scale Attention](https://arxiv.org/abs/2305.13563), [surface-distance](https://github.com/google-deepmind/surface-distance), and [BRISC 2025](https://www.kaggle.com/datasets/briscdataset/brisc2025). Reference repositories retain their own licenses under `third_party/`.
+
+
+## Streamlit research dashboard
+
+Chạy `python -m streamlit run app.py` hoặc `run_app.bat`. Hướng dẫn chế độ mock/real, checkpoint và workflow: [docs/streamlit_app.md](docs/streamlit_app.md).

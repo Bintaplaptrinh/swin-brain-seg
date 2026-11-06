@@ -1,0 +1,56 @@
+{
+  "project": "Brain Tumor CADx with Swin V2 and Swin Hybrid",
+  "task": "Stage 2 Pixel-Level Binary Brain Tumor Segmentation",
+  "model": "Swin Hybrid (nnU-Net CNN + 2D Swin Transformer + EMA Attention)",
+  "checkpoint": "outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt (Epoch 159 EMA)",
+  "evaluated_slices": 860,
+  "pixel_confusion_matrix": {
+    "tp": 3186412,
+    "fp": 287543,
+    "fn": 419256,
+    "tn": 204749189,
+    "total_evaluated_pixels": 208642400,
+    "matrix_2x2": [
+      [204749189, 287543],
+      [419256, 3186412]
+    ],
+    "labels": {
+      "rows": ["Actual Background Pixel", "Actual Tumor Pixel"],
+      "cols": ["Predicted Background Pixel", "Predicted Tumor Pixel"]
+    }
+  },
+  "pixel_level_metrics": {
+    "pixel_precision": 0.917228,
+    "pixel_precision_percentage": "91.72%",
+    "pixel_recall_sensitivity": 0.883727,
+    "pixel_recall_percentage": "88.37%",
+    "pixel_specificity": 0.998598,
+    "pixel_specificity_percentage": "99.86%",
+    "micro_iou": 0.818451,
+    "micro_dice": 0.900163
+  },
+  "per_image_segmentation_metrics": {
+    "weighted_miou": 0.81146175,
+    "overall_dice": 0.87721957,
+    "hd95_pixels": 16.29043,
+    "assd_pixels": 4.68427,
+    "nsd_tolerance_2px": 0.75194
+  },
+  "subtypes_performance": {
+    "Glioma": {
+      "slices": 254,
+      "miou": 0.70489255,
+      "dice": 0.78904129
+    },
+    "Meningioma": {
+      "slices": 306,
+      "miou": 0.90493766,
+      "dice": 0.94662198
+    },
+    "Pituitary": {
+      "slices": 300,
+      "miou": 0.8063449,
+      "dice": 0.8810825
+    }
+  }
+}

@@ -9,7 +9,9 @@ from tqdm import tqdm
 from PIL import Image
 
 from src.datasets.brisc import PLANES, Sample, discover, load_mask, restore_split
-from src.utils.metrics import binary_metrics, summarize
+from src.utils.metrics import (binary_metrics, classifier_confusion_matrix,
+                                plot_classifier_confusion_matrix,
+                                print_classifier_confusion_matrix, summarize)
 from src.trainers.baseline import evaluate, loader, write_json, write_rows
 from src.trainers.swin_hybrid import PROTOCOL, make_model
 from src.core.paths import relocate_config
@@ -89,6 +91,18 @@ def main():
         pipeline = CADxPipeline(classifier_checkpoint=options.classifier_checkpoint,
                                 segmenter_checkpoint=options.checkpoint, device=args.device)
         metrics, rows = evaluate_cadx(test, pipeline, args.nsd_tolerance)
+        # --- Image-level confusion matrix for Stage 1 classifier ---
+        if options.include_no_tumor:
+            cm = classifier_confusion_matrix(rows)
+            print_classifier_confusion_matrix(cm, threshold=pipeline.threshold)
+            metrics['classifier_confusion_matrix'] = cm
+            write_json(options.output / 'classifier_confusion_matrix.json', cm)
+            png_path = plot_classifier_confusion_matrix(
+                cm,
+                options.output / 'classifier_confusion_matrix.png',
+                threshold=pipeline.threshold,
+            )
+            print(f'Confusion matrix image saved → {png_path}', flush=True)
         metadata.update(classifier_checkpoint=str(options.classifier_checkpoint.resolve()),
                         classifier_threshold=pipeline.threshold, segmenter_runs=sum(r['segmenter_ran'] for r in rows),
                         skipped_tumor_images=sum(not r['segmenter_ran'] and r['tumor'] != 'No Tumor' for r in rows),

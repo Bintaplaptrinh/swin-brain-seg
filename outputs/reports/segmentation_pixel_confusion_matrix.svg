@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 640" width="100%" height="100%" style="background:#0f172a; font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;">
+  <defs>
+    <linearGradient id="headerGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="100%" stop-color="#38bdf8"/>
+    </linearGradient>
+    <linearGradient id="tnPixGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f291e"/>
+      <stop offset="100%" stop-color="#14532d"/>
+    </linearGradient>
+    <linearGradient id="tpPixGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#311042"/>
+      <stop offset="100%" stop-color="#6b21a8"/>
+    </linearGradient>
+    <linearGradient id="errPixGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2d1217"/>
+      <stop offset="100%" stop-color="#4c0519"/>
+    </linearGradient>
+    <filter id="shadow2" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="#000000" flood-opacity="0.4"/>
+    </filter>
+  </defs>
+
+  <!-- Title & Header -->
+  <rect x="30" y="25" width="880" height="75" rx="12" fill="#1e293b" filter="url(#shadow2)"/>
+  <text x="55" y="60" fill="url(#headerGrad2)" font-size="22" font-weight="700">Stage 2 Segmentation — Pixel-Level Confusion Matrix</text>
+  <text x="55" y="84" fill="#94a3b8" font-size="13">Model: Swin Hybrid (nnU-Net CNN + 2D Swin Transformer) | 860 Test Slices | 208,642,400 Pixels Evaluated</text>
+
+  <!-- Main Matrix Outer Box -->
+  <g transform="translate(40, 125)">
+    <!-- Column Headers (Predicted) -->
+    <text x="285" y="0" text-anchor="middle" fill="#94a3b8" font-size="14" font-weight="600" letter-spacing="1">DỰ ĐOÁN PIXEL (PREDICTED)</text>
+    <text x="185" y="26" text-anchor="middle" fill="#38bdf8" font-size="13" font-weight="600">Pixel Nền (Background)</text>
+    <text x="385" y="26" text-anchor="middle" fill="#c084fc" font-size="13" font-weight="600">Pixel Khối U (Tumor)</text>
+
+    <!-- Row Headers (Actual) -->
+    <g transform="translate(-15, 235) rotate(-90)">
+      <text x="0" y="0" text-anchor="middle" fill="#94a3b8" font-size="14" font-weight="600" letter-spacing="1">THỰC TẾ PIXEL (ACTUAL)</text>
+    </g>
+
+    <!-- Row Label 1: Actual Background -->
+    <text x="70" y="125" text-anchor="end" fill="#38bdf8" font-size="13" font-weight="600">Pixel Nền</text>
+    <text x="70" y="145" text-anchor="end" fill="#64748b" font-size="11">(Background)</text>
+
+    <!-- Row Label 2: Actual Tumor -->
+    <text x="70" y="305" text-anchor="end" fill="#c084fc" font-size="13" font-weight="600">Pixel Khối U</text>
+    <text x="70" y="325" text-anchor="end" fill="#64748b" font-size="11">(Tumor GT)</text>
+
+    <!-- Cell [0, 0] : TN Pixels -->
+    <rect x="95" y="45" width="180" height="160" rx="10" fill="url(#tnPixGrad)" stroke="#16a34a" stroke-width="2" filter="url(#shadow2)"/>
+    <text x="115" y="75" fill="#86efac" font-size="12" font-weight="700">TN (Background Pixel)</text>
+    <text x="185" y="130" text-anchor="middle" fill="#ffffff" font-size="23" font-weight="800">204,749,189</text>
+    <text x="185" y="170" text-anchor="middle" fill="#4ade80" font-size="13" font-weight="600">99.86% Đặc hiệu</text>
+
+    <!-- Cell [0, 1] : FP Pixels -->
+    <rect x="295" y="45" width="180" height="160" rx="10" fill="url(#errPixGrad)" stroke="#e11d48" stroke-width="1.5" filter="url(#shadow2)"/>
+    <text x="315" y="75" fill="#fda4af" font-size="12" font-weight="700">FP (False Alarm Pixel)</text>
+    <text x="385" y="130" text-anchor="middle" fill="#fecdd3" font-size="26" font-weight="800">287,543</text>
+    <text x="385" y="170" text-anchor="middle" fill="#fb7185" font-size="13">0.14% Nền đoán u</text>
+
+    <!-- Cell [1, 0] : FN Pixels -->
+    <rect x="95" y="225" width="180" height="160" rx="10" fill="url(#errPixGrad)" stroke="#e11d48" stroke-width="1.5" filter="url(#shadow2)"/>
+    <text x="115" y="255" fill="#fda4af" font-size="12" font-weight="700">FN (Missed Tumor Pixel)</text>
+    <text x="185" y="310" text-anchor="middle" fill="#fecdd3" font-size="26" font-weight="800">419,256</text>
+    <text x="185" y="350" text-anchor="middle" fill="#fb7185" font-size="13">11.63% U sót viền</text>
+
+    <!-- Cell [1, 1] : TP Pixels -->
+    <rect x="295" y="225" width="180" height="160" rx="10" fill="url(#tpPixGrad)" stroke="#9333ea" stroke-width="2" filter="url(#shadow2)"/>
+    <text x="315" y="255" fill="#e9d5ff" font-size="12" font-weight="700">TP (Correct Tumor Pixel)</text>
+    <text x="385" y="310" text-anchor="middle" fill="#ffffff" font-size="26" font-weight="800">3,186,412</text>
+    <text x="385" y="350" text-anchor="middle" fill="#d8b4fe" font-size="13" font-weight="600">88.37% Recall u</text>
+  </g>
+
+  <!-- Side Metrics Panel -->
+  <g transform="translate(555, 125)">
+    <rect x="0" y="20" width="355" height="450" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1.5" filter="url(#shadow2)"/>
+    
+    <text x="25" y="55" fill="#f8fafc" font-size="17" font-weight="700">Chỉ Số Phân Đoạn &amp; Biên Khối U</text>
+    <line x1="25" y1="68" x2="330" y2="68" stroke="#334155" stroke-width="1.5"/>
+
+    <!-- mIoU -->
+    <g transform="translate(25, 85)">
+      <text x="0" y="16" fill="#94a3b8" font-size="13">Weighted mIoU (Ảnh có u)</text>
+      <text x="305" y="16" text-anchor="end" fill="#38bdf8" font-size="16" font-weight="800">0.81146 (81.15%)</text>
+      <rect x="0" y="26" width="305" height="6" rx="3" fill="#334155"/>
+      <rect x="0" y="26" width="247" height="6" rx="3" fill="#38bdf8"/>
+    </g>
+
+    <!-- Dice -->
+    <g transform="translate(25, 140)">
+      <text x="0" y="16" fill="#94a3b8" font-size="13">Dice Score (F1-Overlap)</text>
+      <text x="305" y="16" text-anchor="end" fill="#c084fc" font-size="16" font-weight="800">0.87722 (87.72%)</text>
+      <rect x="0" y="26" width="305" height="6" rx="3" fill="#334155"/>
+      <rect x="0" y="26" width="267" height="6" rx="3" fill="#c084fc"/>
+    </g>
+
+    <!-- Pixel Precision -->
+    <g transform="translate(25, 195)">
+      <text x="0" y="16" fill="#94a3b8" font-size="13">Độ chuẩn xác Pixel (Precision)</text>
+      <text x="305" y="16" text-anchor="end" fill="#f59e0b" font-size="16" font-weight="800">91.72%</text>
+      <rect x="0" y="26" width="305" height="6" rx="3" fill="#334155"/>
+      <rect x="0" y="26" width="280" height="6" rx="3" fill="#f59e0b"/>
+    </g>
+
+    <!-- Pixel Recall -->
+    <g transform="translate(25, 250)">
+      <text x="0" y="16" fill="#94a3b8" font-size="13">Độ bao phủ Pixel U (Recall)</text>
+      <text x="305" y="16" text-anchor="end" fill="#10b981" font-size="16" font-weight="800">88.37%</text>
+      <rect x="0" y="26" width="305" height="6" rx="3" fill="#334155"/>
+      <rect x="0" y="26" width="269" height="6" rx="3" fill="#10b981"/>
+    </g>
+
+    <!-- Boundary Metrics Card -->
+    <g transform="translate(20, 315)">
+      <rect x="0" y="0" width="315" height="130" rx="8" fill="#0f172a" stroke="#334155" stroke-width="1"/>
+      <text x="15" y="25" fill="#f1f5f9" font-size="13" font-weight="700">ĐỘ ĐO KHOẢNG CÁCH BIÊN (SURFACE):</text>
+      <text x="15" y="52" fill="#94a3b8" font-size="12">HD95 (Hausdorff 95th):</text>
+      <text x="300" y="52" text-anchor="end" fill="#38bdf8" font-size="13" font-weight="700">16.29 px</text>
+
+      <text x="15" y="80" fill="#94a3b8" font-size="12">ASSD (Sai số biên trung bình):</text>
+      <text x="300" y="80" text-anchor="end" fill="#a78bfa" font-size="13" font-weight="700">4.68 px</text>
+
+      <text x="15" y="108" fill="#94a3b8" font-size="12">NSD (Surface Dice @ 2px):</text>
+      <text x="300" y="108" text-anchor="end" fill="#34d399" font-size="13" font-weight="700">0.75194 (75.2%)</text>
+    </g>
+  </g>
+
+  <!-- Footer note -->
+  <text x="470" y="615" text-anchor="middle" fill="#64748b" font-size="12">Stage 2 Swin Hybrid | 38,801,022 parameters | 237.78 GFLOPs | 49.60 ms latency</text>
+</svg>

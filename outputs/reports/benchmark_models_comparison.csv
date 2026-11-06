@@ -1,0 +1,5 @@
+Model Name,Epoch,Weights,Input Size,Parameters (M),GFLOPs,Latency (ms),Weighted mIoU,Dice (%),Glioma mIoU,Meningioma mIoU,Pituitary mIoU,Status
+Swin Hybrid (Val-selected),109,EMA,512,38.80,237.78,49.81,0.81465,87.96,0.70659,0.90876,0.81015,Best Val Checkpoint
+Swin Hybrid (Final Production),159,EMA,512,38.80,237.78,49.60,0.81146,87.72,0.70489,0.90494,0.80634,Production Default
+KAN Network,54,EMA,256,8.92,32.11,26.04,0.79530,86.51,0.66709,0.89807,0.79902,Baseline 1
+Custom 2D nnU-Net Depthwise 7x7,23,EMA,256,8.80,31.90,11.32,0.79378,86.58,0.66223,0.89489,0.80202,Baseline 2

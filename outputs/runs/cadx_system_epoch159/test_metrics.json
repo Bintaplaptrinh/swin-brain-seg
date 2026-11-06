@@ -1,0 +1,85 @@
+{
+  "selected_epoch": 159,
+  "selected_weights": "EMA",
+  "checkpoint": "outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt",
+  "classifier_checkpoint": "outputs/checkpoints/classifer_swinv2_tiny/classifer_swinv2_tiny_binary.pt",
+  "classifier_threshold": 0.4,
+  "segmenter_runs": 860,
+  "skipped_tumor_images": 0,
+  "evaluation_config": {
+    "device": "cuda",
+    "batch_size": 1,
+    "size": 512,
+    "amp": false
+  },
+  "overall": {
+    "images": 1000,
+    "mIoU": 0.83787,
+    "Dice": 0.89442,
+    "empty_predictions": 140,
+    "empty_targets": 140,
+    "both_empty": 140
+  },
+  "tumor_only": {
+    "images": 860,
+    "mIoU": 0.81148,
+    "Dice": 0.87723,
+    "empty_predictions": 0,
+    "empty_targets": 0,
+    "both_empty": 0
+  },
+  "no_tumor": {
+    "images": 140,
+    "mIoU": 1.0,
+    "Dice": 1.0,
+    "false_positive_images": 0,
+    "image_false_positive_rate": 0.0,
+    "ground_truth": "Empty masks from classification no_tumor labels",
+    "positive_rule": "Any predicted foreground pixel; no postprocessing"
+  },
+  "per_class": {
+    "Glioma": {
+      "images": 254,
+      "mIoU": 0.70489,
+      "Dice": 0.78904
+    },
+    "Meningioma": {
+      "images": 306,
+      "mIoU": 0.90494,
+      "Dice": 0.94662
+    },
+    "Pituitary": {
+      "images": 300,
+      "mIoU": 0.80634,
+      "Dice": 0.88108
+    },
+    "No Tumor": {
+      "images": 140,
+      "mIoU": 1.0,
+      "Dice": 1.0
+    }
+  },
+  "Weighted_mIoU": 0.83787,
+  "classifier_confusion_matrix": {
+    "tp": 860,
+    "fp": 0,
+    "fn": 0,
+    "tn": 140,
+    "total": 1000,
+    "sensitivity": 1.0,
+    "specificity": 1.0,
+    "precision": 1.0,
+    "npv": 1.0,
+    "f1": 1.0,
+    "accuracy": 1.0,
+    "matrix": [
+      [140, 0],
+      [0, 860]
+    ],
+    "labels": {
+      "rows": ["Actual Negative (No Tumor)", "Actual Positive (Tumor)"],
+      "cols": ["Predicted Negative", "Predicted Positive"]
+    }
+  },
+  "metric_note": "Per-image IoU/Dice: both empty = 1, false positive on empty target = 0. Overall includes all 1000 images."
+}
