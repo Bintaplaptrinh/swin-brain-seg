@@ -27,7 +27,7 @@ flowchart TD
 | **Số lượng tham số** | 27,573,985 (~27.57M) | 38,801,022 (~38.80M) |
 | **Độ phức tạp tính toán** | ~4.5 GFLOPs | 237.78 GFLOPs |
 | **Độ trễ suy luận** | ~14.8 ms / lát cắt | ~49.60 ms / lát cắt (CUDA AMP) |
-| **Nền tảng triển khai** | PyTorch / ONNX Runtime | PyTorch / Streamlit |
+| **Nền tảng triển khai** | PyTorch / ONNX Runtime | PyTorch / ONNX Runtime / Native Rust Desktop GUI |
 
 ---
 
@@ -99,7 +99,7 @@ Tập dữ liệu BRISC 2025 gồm 3 phân nhóm u não với đặc trưng bệ
 | Mô hình | Epoch | Trọng số | Kích thước | Tham số (M) | GFLOPs | Độ trễ (ms) | Glioma mIoU | Weighted mIoU | Dice |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Swin Hybrid (Val-selected)** | 109 | EMA | 512×512 | 38.80 | 237.78 | 49.81 | **0.70659** | **0.81465** | **0.87959** |
-| **Swin Hybrid (Streamlit / PyTorch)** | 159 | EMA | 512×512 | 38.80 | 237.78 | 49.60 | **0.70489** | **0.81146** | **0.87722** |
+| **Swin Hybrid (Production / Rust)** | 159 | EMA | 512×512 | 38.80 | 237.78 | 49.60 | **0.70489** | **0.81146** | **0.87722** |
 | **KAN (Kolmogorov-Arnold)** | 54 | EMA | 256×256 | 8.92 | 32.11 | 26.04 | 0.66709 | 0.79530 | 0.86515 |
 | **nnU-Net v2 + Depthwise 7×7** | 23 | EMA | 256×256 | 8.80 | 31.90 | 11.32 | 0.66223 | 0.79378 | 0.86580 |
 | **BiRef Historical Baseline** | 38 | EMA | 256×256 | ~10.0 | 32.53 | 12.19 | 0.68229 | 0.80302 | 0.87289 |

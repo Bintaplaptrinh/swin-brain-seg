@@ -1,6 +1,6 @@
 # Workspace reorganization — 2026-11-03
 
-At the time of this reorganization, the workspace used `configs`, `data`, `src`, `scripts`, `outputs`, `tests`, and a Rust `inference` crate. The output directory is spelled **outputs** consistently.
+The workspace now uses `configs`, `data`, `src`, `scripts`, `outputs`, `tests`, and a Rust `inference` crate. The output directory is spelled **outputs** consistently.
 
 | Previous location | Current location |
 |---|---|
@@ -33,7 +33,3 @@ The initial checkpoint inventory, file sizes, deletion decisions and retained-fi
 Source before the reorganization is backed up as `outputs/logs/reorganization/source_before.zip`, excluding redundant model binaries. The one-time migration script is retained with the reorganization records and refuses to rerun after migration.
 
 Validation: 129 Python tests; 3 Rust tests; Rust release build and CUDA-feature compilation; two-epoch CUDA Swin smoke with delayed EMA; Swin resume into a separate destination; one-epoch depthwise smoke; evaluation of final Swin, retained KAN and the lower-scoring depthwise predecessor; ONNX graph validation and real-input PyTorch parity; six native Rust input/mask parity cases; editable Python package installation. Compact numerical results are in `outputs/logs/reorganization/validation.json`.
-
-## Streamlit replacement — 2026-11-06
-
-The active inference app is now `app.py` with `app_components`, `app_views`, `app_services` and `app_utils`. The old Rust crate and `scripts/verify_rust_inference.py` were removed. Earlier Rust build/parity results above are historical records. Training code, model checkpoints, benchmark evidence and optional ONNX exporters remain available.

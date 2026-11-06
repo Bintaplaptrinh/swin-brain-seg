@@ -1,0 +1,20 @@
+[package]
+name = "brain-inference"
+version = "0.1.0"
+edition = "2024"
+description = "Native Rust Swin Hybrid segmentation using ONNX Runtime"
+
+[dependencies]
+anyhow = "1"
+clap = { version = "4", features = ["derive"] }
+image = { version = "0.25", default-features = false, features = ["png", "jpeg"] }
+ort = { version = "=2.0.0-rc.10", default-features = false, features = ["std", "load-dynamic"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+sha2 = "0.10"
+eframe = { version = "0.32", default-features = false, features = ["default_fonts", "glow"], optional = true }
+rfd = { version = "0.15", default-features = false, features = ["xdg-portal", "async-std"], optional = true }
+
+[features]
+gui = ["dep:eframe", "dep:rfd"]
+cuda = ["ort/cuda"]

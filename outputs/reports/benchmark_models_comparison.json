@@ -31,7 +31,7 @@
     "glioma_miou": 0.70489,
     "meningioma_miou": 0.90494,
     "pituitary_miou": 0.80634,
-    "role": "Streamlit/Python Inference Default"
+    "role": "Rust/Python Inference Default"
   },
   {
     "model_name": "KAN (Kolmogorov-Arnold Network)",
