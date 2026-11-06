@@ -9,7 +9,7 @@
     "Glioma": {
       "images": 254,
       "mIoU": 0.7048925527242309,
-      "Dice": 0.7890412854192041
+      "Dice": 0.7890412854192042
     },
     "Meningioma": {
       "images": 306,
@@ -19,7 +19,7 @@
     "Pituitary": {
       "images": 300,
       "mIoU": 0.8063449038888849,
-      "Dice": 0.8810824981035214
+      "Dice": 0.8810824981035213
     }
   },
   "Weighted_mIoU": 0.8114617484803857,
@@ -31,15 +31,23 @@
     "ASSD_px": 4.68427,
     "NSD": 0.75194,
     "confusion_pixels": {
-      "tp": 3186412,
-      "fp": 287543,
-      "fn": 419256,
-      "tn": 204749189
-    }
+      "tp": 3204559,
+      "fp": 364931,
+      "fn": 377711,
+      "tn": 204671725
+    },
+    "micro_IoU": 0.8118560468544672,
+    "micro_Dice": 0.8961595467409421
   },
   "efficiency": {
     "parameters": 38801022,
     "supported_GFLOPs": 237.777270336,
     "cuda_amp_forward_median_ms": 49.599250000028405
+  },
+  "confusion_provenance": {
+    "source": "outputs/runs/swin_hybrid_512_unfrozen_seed2026/epoch159_test/test_per_image.csv",
+    "sha256": "f588eccf3d0f7442d362c219bd02d8637cc878869960e627a4da38463f615309",
+    "rows": 860,
+    "note": "Pixel counts summed from saved rows; no new model inference. Original overlap headline values retained."
   }
 }

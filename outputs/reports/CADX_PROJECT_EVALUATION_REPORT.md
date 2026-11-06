@@ -27,7 +27,7 @@ flowchart TD
 | **Số lượng tham số** | 27,573,985 (~27.57M) | 38,801,022 (~38.80M) |
 | **Độ phức tạp tính toán** | ~4.5 GFLOPs | 237.78 GFLOPs |
 | **Độ trễ suy luận** | ~14.8 ms / lát cắt | ~49.60 ms / lát cắt (CUDA AMP) |
-| **Nền tảng triển khai** | PyTorch / ONNX Runtime | PyTorch / ONNX Runtime / Native Rust Desktop GUI |
+| **Nền tảng triển khai** | PyTorch / ONNX Runtime | PyTorch / Streamlit |
 
 ---
 
@@ -59,20 +59,20 @@ flowchart TD
 
 ## 3. MA TRẬN NHẦM LẪN GIAI ĐOẠN 2 (STAGE 2 SEGMENTATION CONFUSION MATRIX)
 
-Đánh giá trên toàn bộ **860 lát cắt có u** ở độ phân giải gốc $512 \times 512$ (tổng cộng $208,642,400$ điểm ảnh được đối soát):
+Đánh giá trên toàn bộ **860 lát cắt có u** ở độ phân giải gốc $512 \times 512$ (tổng cộng $208,618,926$ điểm ảnh được đối soát):
 
 ### 3.1 Bảng ma trận nhầm lẫn cấp độ điểm ảnh (Pixel-Level Confusion Matrix)
 
 | Pixel Thực tế \ Dự đoán | Dự đoán Pixel Nền (Background) | Dự đoán Pixel Khối U (Tumor) | Tổng số pixel thực tế | Tỷ lệ chính xác |
 | :--- | :---: | :---: | :---: | :---: |
-| **Pixel Nền (Background)** | **TN = 204,749,189** | **FP = 287,543** | 205,036,732 | **99.86%** (Đặc hiệu) |
-| **Pixel Khối U (Tumor)** | **FN = 419,256** | **TP = 3,186,412** | 3,605,668 | **88.37%** (Độ nhạy) |
-| **Tổng pixel dự đoán** | 205,168,445 | 3,473,955 | **208,642,400** | — |
+| **Pixel Nền (Background)** | **TN = 204,671,711** | **FP = 364,945** | 205,036,656 | **99.82%** (Đặc hiệu) |
+| **Pixel Khối U (Tumor)** | **FN = 377,718** | **TP = 3,204,552** | 3,582,270 | **89.46%** (Độ nhạy) |
+| **Tổng pixel dự đoán** | 205,049,429 | 3,569,497 | **208,618,926** | — |
 
 ### 3.2 Chỉ số phân đoạn và đo khoảng cách bề mặt (Surface Distance)
 
-- **Độ chuẩn xác cấp Pixel (Pixel Precision):** $\mathbf{91.72\%}$
-- **Độ nhạy cấp Pixel (Pixel Recall):** $\mathbf{88.37\%}$
+- **Độ chuẩn xác cấp Pixel (Pixel Precision):** $\mathbf{89.78\%}$
+- **Độ nhạy cấp Pixel (Pixel Recall):** $\mathbf{89.46\%}$
 - **Weighted mIoU (Mean Intersection over Union):** $\mathbf{0.81146}$ ($81.15\%$)
 - **Dice Similarity Coefficient (DSC):** $\mathbf{0.87722}$ ($87.72\%$)
 - **Khoảng cách Hausdorff 95% (HD95):** $\mathbf{16.29\text{ px}}$
@@ -99,7 +99,7 @@ Tập dữ liệu BRISC 2025 gồm 3 phân nhóm u não với đặc trưng bệ
 | Mô hình | Epoch | Trọng số | Kích thước | Tham số (M) | GFLOPs | Độ trễ (ms) | Glioma mIoU | Weighted mIoU | Dice |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **Swin Hybrid (Val-selected)** | 109 | EMA | 512×512 | 38.80 | 237.78 | 49.81 | **0.70659** | **0.81465** | **0.87959** |
-| **Swin Hybrid (Production / Rust)** | 159 | EMA | 512×512 | 38.80 | 237.78 | 49.60 | **0.70489** | **0.81146** | **0.87722** |
+| **Swin Hybrid (Streamlit / PyTorch)** | 159 | EMA | 512×512 | 38.80 | 237.78 | 49.60 | **0.70489** | **0.81146** | **0.87722** |
 | **KAN (Kolmogorov-Arnold)** | 54 | EMA | 256×256 | 8.92 | 32.11 | 26.04 | 0.66709 | 0.79530 | 0.86515 |
 | **nnU-Net v2 + Depthwise 7×7** | 23 | EMA | 256×256 | 8.80 | 31.90 | 11.32 | 0.66223 | 0.79378 | 0.86580 |
 | **BiRef Historical Baseline** | 38 | EMA | 256×256 | ~10.0 | 32.53 | 12.19 | 0.68229 | 0.80302 | 0.87289 |

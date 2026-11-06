@@ -18,9 +18,7 @@ from app_utils.imaging import compute_mask_metrics
 ROOT_DIR = Path(__file__).resolve().parents[1]
 
 CLASSIFIER_CKPT = ROOT_DIR / "outputs/checkpoints/classifer_swinv2_tiny/classifer_swinv2_tiny_binary.pt"
-CLASSIFIER_ONNX = ROOT_DIR / "outputs/checkpoints/classifer_swinv2_tiny/classifer_swinv2_tiny_binary.onnx"
 SEGMENTER_CKPT = ROOT_DIR / "outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt"
-SEGMENTER_ONNX = ROOT_DIR / "outputs/checkpoints/exports/swin_hybrid_epoch159.onnx"
 
 # Global operating mode: "auto" (detect real weights or fallback to simulation), "real", or "mock"
 MODEL_MODE = os.getenv("MODEL_MODE", "auto").lower()
@@ -40,7 +38,7 @@ def _is_git_lfs_pointer(path: Path) -> bool:
 
 
 class MedicalInferenceEngine:
-    """CADx Inference Engine supporting PyTorch/ONNX Runtime and Clinical Benchmark Emulation."""
+    """PyTorch CADx adapter with an explicitly labeled UI simulation mode."""
 
     def __init__(self, mode: str = MODEL_MODE):
         if mode not in {"auto", "real", "mock"}:
@@ -51,7 +49,7 @@ class MedicalInferenceEngine:
         self._initialize_backends()
 
     def _initialize_backends(self):
-        """Check availability of actual PyTorch/ONNX checkpoints."""
+        """Load the trained PyTorch pipeline when its checkpoints are available."""
         if self.mode == "mock":
             self.is_real_loaded = False
             return

@@ -1,8 +1,8 @@
 # MRI: Brain Tumor CADx with Swin V2 and Swin Hybrid
 
-Swin Hybrid combines a trainable Swin Transformer with a six-stage nnU-Net residual encoder, multiscale feature fusion, depthwise refinement, and a detail-aware decoder for **binary brain tumor segmentation on 2D MRI slices**. The project includes reproducible training, KAN and depthwise comparison models, and a native **Rust inference application**.
+Swin Hybrid combines a trainable Swin Transformer with a six-stage nnU-Net residual encoder, multiscale feature fusion, depthwise refinement, and a detail-aware decoder for **binary brain tumor segmentation on 2D MRI slices**. The project includes reproducible training, KAN and depthwise comparison models, and a **Vietnamese Streamlit inference application**.
 
-The default Python and Rust pipelines use the final Swin Hybrid EMA weights from epoch 159. The validation-selected EMA from epoch 109 and the historical comparison experiments are documented in the [benchmark archive](docs/benchmarks/README.md).
+The Python pipeline and Streamlit app use the final Swin Hybrid EMA weights from epoch 159. The validation-selected EMA from epoch 109 and the historical comparison experiments are documented in the [benchmark archive](docs/benchmarks/README.md).
 
 ## Architecture
 
@@ -68,21 +68,26 @@ The [Kaggle training notebook](notebooks/Kaggle_SwinV2_Classifier.ipynb) writes 
 
 ## Inference checkpoints
 
-This repository stores the default inference weights in Git LFS. After cloning with Git LFS installed, run `git lfs pull` if the weights are still pointer files. Python uses the classifier PT, Swin Hybrid epoch 159 `last.pt`, and `Brain_Swin_UNETR.pth`. Rust uses the classifier and epoch 159 ONNX graphs and their adjacent checksum JSON files.
+This repository stores the default inference weights in Git LFS. After cloning with Git LFS installed, run `git lfs pull` if the weights are still pointer files. The app uses the classifier PT, Swin Hybrid epoch 159 `last.pt`, and `Brain_Swin_UNETR.pth`. ONNX graphs and their adjacent metadata are optional export artifacts; the app uses PyTorch.
 
-## Rust desktop inference UI
+## Streamlit inference app
 
-From the project root, build and launch the desktop interface. The local Python command locates the ONNX Runtime DLL installed with the development dependencies. You can also pass the DLL's path directly.
+Launch the application from the project root:
 
 ```powershell
-cargo build --release --locked --features gui --manifest-path inference/Cargo.toml
-$ortDll = python -c "import pathlib,onnxruntime; print(pathlib.Path(onnxruntime.__file__).parent/'capi'/'onnxruntime.dll')"
-.\inference\target\release\brain-inference.exe --gui --ort-dylib $ortDll
+.\run_app.bat
 ```
 
-Use **Kịch bản** to select one of four labeled BRISC test slices or **Mở ảnh JPG/PNG** to open a custom image. The top row shows the preprocessed input and the screening result, with a red overlay when the segmenter predicts tumor pixels. The bottom row shows the original and, for built-in cases, the BRISC label and green reference overlay. The three tumor types in the dropdown describe reference labels. Inference predicts tumor presence and a binary mask. **Bật CLAHE** applies an 8×8 tile contrast enhancement to the grayscale image before both models and defaults to off.
+The launcher uses `.venv/Scripts/python.exe` when available and defaults to real-model inference. To launch manually:
 
-The tumor examples were selected for irregular boundaries and Dice above 0.80. The no-tumor example has strong within-tissue intensity gradients. In the Rust CPU check, all four matched the binary screening label. Glioma, meningioma and pituitary had Dice **0.8897, 0.9375 and 0.9078** with CLAHE off and **0.8177, 0.9275 and 0.8718** with CLAHE on. These are selected demonstration cases.
+```powershell
+$env:MODEL_MODE = "real"
+python -m streamlit run app.py
+```
+
+Open **Phân tích MRI**, upload a PNG/JPG/JPEG, run screening, and run segmentation for a positive result. The app displays the original image, mask and overlay, region statistics, and PNG/JSON downloads. Changing the image clears earlier results; changing overlay settings retains predictions.
+
+`real` reports missing weights or initialization errors. Explicit `mock` mode and the `auto` fallback label simulated outputs. Built-in synthetic images are for UI testing. Display contrast does not alter model input. See [the app guide](docs/streamlit_app.md) for setup, checkpoints and operating modes.
 
 ## Project layout
 
@@ -113,13 +118,15 @@ outputs/
   checkpoints/<run>/      # best.pt and last.pt
   checkpoints/classifer_swinv2_tiny/ # Classifier checkpoint and ONNX export
   checkpoints/pretrained/ # Original Brain Swin initialization
-  checkpoints/exports/    # ONNX graph and checksum/epoch metadata
+  checkpoints/exports/    # Optional ONNX research exports and metadata
   logs/<run>/             # Training history.jsonl and diagnostic logs
   runs/<run>/             # Config, splits, metrics, per-image results, status
-inference/
-  Cargo.toml
-  Cargo.lock
-  src/*.rs                # Entire inference application is written in Rust
+app.py                    # Streamlit entry point
+app_components/           # Shared UI components
+app_views/                # Analysis and information pages
+app_services/             # PyTorch model adapter and explicit mock mode
+app_utils/                # Images, masks, metrics and styles
+.streamlit/               # Streamlit theme
 tests/
 docs/                     # Architecture, benchmark evidence, archived notes
 third_party/              # Preserved reference repositories and their licenses
@@ -240,42 +247,20 @@ The Python inference pipeline ran in FP32 on CUDA with batch size 1. The test in
 | Tumor slices | 860 | 860 | 0.81148 | 0.87723 | — |
 | No-tumor slices | 140 | 0 | 1.00000 | 1.00000 | 0/140 |
 
-## Rust inference
+## Optional ONNX export
 
-All inference application source files are Rust. The Python **export utility lives in `scripts/`**, alongside training tooling. Export both models to ONNX once so the Rust application can run with ONNX Runtime. The default segmenter uses **EMA epoch 159**.
+The Streamlit app loads PyTorch checkpoints directly. The research export utilities remain available for separate ONNX experiments:
 
 ```powershell
-# Regenerate only if the ONNX files are absent
 python -m scripts.export_swin_classifier
 python -m scripts.export_swin_hybrid
-
-# Build with stable Rust; tested with rustc/cargo 1.96.1
-cargo build --release --locked --manifest-path inference/Cargo.toml
-
-# During setup, locate the CPU ONNX Runtime library installed with requirements-dev
-$ortDll = python -c "import pathlib,onnxruntime; print(pathlib.Path(onnxruntime.__file__).parent/'capi'/'onnxruntime.dll')"
-
-.\inference\target\release\brain-inference.exe --input data/data/brisc2025/segmentation_task/test/images/brisc2025_test_00001_gl_ax_t1.jpg --output outputs/runs/predictions_example --ort-dylib $ortDll
 ```
 
-`--input` accepts one JPEG/PNG or a flat directory of images. Masks are native-size PNGs with 0 for background and 255 for tumor. A negative slice gets an empty PNG and skips the segmenter. Per-image JSON records the screening result, whether segmentation ran, model weights, dimensions, foreground count and timing. The application checks both ONNX files against their adjacent JSON checksums and rejects existing output filenames. Deploy the executable with both ONNX/JSON pairs and a compatible ONNX Runtime library. Use `--classifier` to select another classifier export or `--segment-only` for segmentation benchmarks. `--ort-dylib` also accepts `libonnxruntime.so`/`.dylib`; alternatively configure `ORT_DYLIB_PATH`.
-
-To deploy the validation-selected checkpoint instead:
-
-```powershell
-python -m scripts.export_swin_hybrid --checkpoint outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/best.pt --output outputs/checkpoints/exports/swin_hybrid_epoch109.onnx
-# Pass --model outputs/checkpoints/exports/swin_hybrid_epoch109.onnx to the Rust executable.
-```
-
-The export fixes input shape to `[1, 1, 512, 512]` and outputs float32 logits `[1, 2, 512, 512]`. Equivalent fixed pooling replaces adaptive context pooling only in the export copy. The exporter checks ONNX validity and real-image logit parity. The verified export had maximum absolute logit error **0.0004573** and **100% argmax agreement** against float32 PyTorch on that image.
-
-Native Rust preprocessing/restoration was checked on five PNG cases, including non-square upsampling/downsampling: maximum input error was below **5e-7** and restored masks matched exactly. A JPEG case matched **99.9981%** of native mask pixels; independent JPEG decoders introduce rounding near zero before nonzero-pixel normalization. This functional check is separate from the 860-image PyTorch accuracy benchmark. See [parity results](outputs/runs/rust_parity_verified/parity.json).
-
-CPU inference is verified using ONNX Runtime **1.24.4**. CUDA inference is available with `cargo build --release --features cuda --manifest-path inference/Cargo.toml` and `--device cuda`; its build was checked, but its runtime was not measured here. Supply an ONNX Runtime GPU build and compatible CUDA/cuDNN libraries following the [official CUDA provider compatibility guide](https://onnxruntime.ai/docs/execution-providers/CUDA-ExecutionProvider.html).
+The Swin export fixes input to `[1, 1, 512, 512]` and outputs float32 logits `[1, 2, 512, 512]`. It records checkpoint hashes and checks real-image logit parity. Exporting does not change the original training modules or checkpoint bytes.
 
 ## Recommended hardware
 
-For the documented training configuration, use an **NVIDIA CUDA GPU with 12 GB VRAM or more**; the tested reference is an [RTX 3060 12 GB](https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3060-3060ti/). This is a recommendation based on the retained experiment and measured memory, not a minimum proven for every environment. Start Swin with physical batch 2/effective batch 16; reduce the physical batch to 1 if memory is constrained. KAN's retained batch-32 training reserved substantially more memory than this Swin configuration. Keep system RAM available for workers and checkpoint loading; reduce workers on constrained Windows hosts. CPU Rust inference is supported for deployment without a CUDA GPU.
+For the documented training configuration, use an **NVIDIA CUDA GPU with 12 GB VRAM or more**; the tested reference is an [RTX 3060 12 GB](https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3060-3060ti/). This is a recommendation based on the retained experiment and measured memory, not a minimum proven for every environment. Start Swin with physical batch 2/effective batch 16; reduce the physical batch to 1 if memory is constrained. KAN's retained batch-32 training reserved substantially more memory than this Swin configuration. Keep system RAM available for workers and checkpoint loading; reduce workers on constrained Windows hosts. The Streamlit app can use CPU inference when CUDA is unavailable; latency depends on the host.
 
 ## Reproducing the tests
 
@@ -285,11 +270,11 @@ python -m scripts.evaluate_checkpoint --checkpoint outputs/checkpoints/swin_hybr
 python -m scripts.evaluate_hybrid_checkpoint --checkpoint outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt --output outputs/runs/cadx_system_repeat --include-no-tumor --classifier-checkpoint outputs/checkpoints/classifer_swinv2_tiny/classifer_swinv2_tiny_binary.pt
 
 python -m pytest -q
-cargo test --locked --manifest-path inference/Cargo.toml
-python -m scripts.verify_rust_inference --output outputs/runs/rust_parity_repeat
+$env:MODEL_MODE = "mock"
+python -m pytest tests/test_app_workflow.py -q
 ```
 
-Reorganization verification passed **129 Python tests**, **3 Rust tests**, two CUDA Swin smoke epochs, a separate depthwise smoke run, and Swin checkpoint resume. Original experiment checkpoint bytes were preserved and verified by SHA-256. Smoke model binaries were removed after verification. The checkpoint inventory is [outputs/checkpoints/manifest.json](outputs/checkpoints/manifest.json); cleanup details and validation logs are under `outputs/logs/reorganization`.
+Historical reorganization verification passed **129 Python tests**, two CUDA Swin smoke epochs, a separate depthwise smoke run, and Swin checkpoint resume. Original experiment checkpoint bytes were preserved and verified by SHA-256. Smoke model binaries were removed after verification. The checkpoint inventory is [outputs/checkpoints/manifest.json](outputs/checkpoints/manifest.json); cleanup details and validation logs are under `outputs/logs/reorganization`.
 
 Retained experiment families are **Swin Hybrid 512/unfrozen**, **KAN 20261101**, and the highest-scoring **depthwise 7×7**. Verification, KAN two-way, BiRef, Swin 300/frozen, epoch-58 and lower-scoring depthwise checkpoint binaries were removed. Compact historical reports remain under `docs/benchmarks/historical`; prior architecture notes are explicitly archived. Original checkpoint/config provenance may contain the former paths; current loaders resolve the relocated data and pretrained initialization without rewriting the saved weights.
 

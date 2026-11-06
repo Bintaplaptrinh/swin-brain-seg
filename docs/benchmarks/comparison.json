@@ -17,7 +17,7 @@
     "report_sha256": "4133826ef1a9a7bbdb9a1f673d01f29acc792bcb3a293b3d2a3cae02ba08ca6d"
   },
   {
-    "model": "Swin Hybrid (final EMA; Rust default)",
+    "model": "Swin Hybrid (final EMA; Streamlit default)",
     "epoch": 159,
     "weights": "EMA",
     "test_images": 860,
@@ -31,7 +31,7 @@
     "supported_GFLOPs": 237.777270336,
     "cuda_amp_forward_median_ms": 49.599250000028405,
     "report": "outputs/runs/swin_hybrid_512_unfrozen_seed2026/epoch159_test/test_metrics.json",
-    "report_sha256": "197e9d0c04a236b21aba6777cd1d512dcb9a33266b706b5d85a088e99d2fac8e"
+    "report_sha256": "6e58d7645b4dbca400e8f1a83b855096101cc762006a1904731ffc7f84035b81"
   },
   {
     "model": "KAN",

@@ -45,7 +45,7 @@ Adapter `app_services/inference_service.py` sử dụng `src.pipeline.CADxPipeli
 - `outputs/checkpoints/swin_hybrid_512_unfrozen_seed2026/last.pt`
 - `outputs/checkpoints/pretrained/Brain_Swin_UNETR.pth` (tokenizer được checkpoint segmentation tham chiếu)
 
-Tải các file Git LFS của repository hoặc đặt checkpoint tương thích tại các đường dẫn này. Với checkpoint khác, cập nhật hằng đường dẫn trong adapter. Pipeline kiểm tra state dict và tokenizer hash nếu checkpoint có lưu hash. Chế độ ứng dụng hiện sử dụng PyTorch; các bản ONNX dành cho luồng inference khác trong repository.
+Tải các file Git LFS của repository hoặc đặt checkpoint tương thích tại các đường dẫn này. Với checkpoint khác, cập nhật hằng đường dẫn trong adapter. Pipeline kiểm tra state dict và tokenizer hash nếu checkpoint có lưu hash. Chế độ ứng dụng hiện sử dụng PyTorch; các bản ONNX và script export được giữ cho thí nghiệm riêng, không được app sử dụng.
 
 Screening gọi `classifier.predict_slice` riêng, không chạy segmentation sớm. Segmenter sử dụng tiền xử lý letterbox, chuẩn hóa nonzero và khôi phục xác suất về kích thước gốc theo pipeline hiện có. Mask nhị phân mặc định dùng ngưỡng 0.50. Không coi thống kê thí nghiệm cũ là hiệu năng đã xác minh của ứng dụng đang chạy.
 

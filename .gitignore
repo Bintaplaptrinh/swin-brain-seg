@@ -8,7 +8,6 @@ dist/
 data/data/
 data/processed/*
 !data/processed/.gitkeep
-inference/target/
 .env
 .kaggle/
 third_party/

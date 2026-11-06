@@ -24,7 +24,7 @@
   <!-- Title & Header -->
   <rect x="30" y="25" width="880" height="75" rx="12" fill="#1e293b" filter="url(#shadow2)"/>
   <text x="55" y="60" fill="url(#headerGrad2)" font-size="22" font-weight="700">Stage 2 Segmentation — Pixel-Level Confusion Matrix</text>
-  <text x="55" y="84" fill="#94a3b8" font-size="13">Model: Swin Hybrid (nnU-Net CNN + 2D Swin Transformer) | 860 Test Slices | 208,642,400 Pixels Evaluated</text>
+  <text x="55" y="84" fill="#94a3b8" font-size="13">Model: Swin Hybrid (nnU-Net CNN + 2D Swin Transformer) | 860 Test Slices | 208,618,926 Pixels Evaluated</text>
 
   <!-- Main Matrix Outer Box -->
   <g transform="translate(40, 125)">
@@ -49,26 +49,26 @@
     <!-- Cell [0, 0] : TN Pixels -->
     <rect x="95" y="45" width="180" height="160" rx="10" fill="url(#tnPixGrad)" stroke="#16a34a" stroke-width="2" filter="url(#shadow2)"/>
     <text x="115" y="75" fill="#86efac" font-size="12" font-weight="700">TN (Background Pixel)</text>
-    <text x="185" y="130" text-anchor="middle" fill="#ffffff" font-size="23" font-weight="800">204,749,189</text>
-    <text x="185" y="170" text-anchor="middle" fill="#4ade80" font-size="13" font-weight="600">99.86% Đặc hiệu</text>
+    <text x="185" y="130" text-anchor="middle" fill="#ffffff" font-size="23" font-weight="800">204,671,711</text>
+    <text x="185" y="170" text-anchor="middle" fill="#4ade80" font-size="13" font-weight="600">99.82% Đặc hiệu</text>
 
     <!-- Cell [0, 1] : FP Pixels -->
     <rect x="295" y="45" width="180" height="160" rx="10" fill="url(#errPixGrad)" stroke="#e11d48" stroke-width="1.5" filter="url(#shadow2)"/>
     <text x="315" y="75" fill="#fda4af" font-size="12" font-weight="700">FP (False Alarm Pixel)</text>
-    <text x="385" y="130" text-anchor="middle" fill="#fecdd3" font-size="26" font-weight="800">287,543</text>
-    <text x="385" y="170" text-anchor="middle" fill="#fb7185" font-size="13">0.14% Nền đoán u</text>
+    <text x="385" y="130" text-anchor="middle" fill="#fecdd3" font-size="26" font-weight="800">364,945</text>
+    <text x="385" y="170" text-anchor="middle" fill="#fb7185" font-size="13">0.18% Nền đoán u</text>
 
     <!-- Cell [1, 0] : FN Pixels -->
     <rect x="95" y="225" width="180" height="160" rx="10" fill="url(#errPixGrad)" stroke="#e11d48" stroke-width="1.5" filter="url(#shadow2)"/>
     <text x="115" y="255" fill="#fda4af" font-size="12" font-weight="700">FN (Missed Tumor Pixel)</text>
-    <text x="185" y="310" text-anchor="middle" fill="#fecdd3" font-size="26" font-weight="800">419,256</text>
-    <text x="185" y="350" text-anchor="middle" fill="#fb7185" font-size="13">11.63% U sót viền</text>
+    <text x="185" y="310" text-anchor="middle" fill="#fecdd3" font-size="26" font-weight="800">377,718</text>
+    <text x="185" y="350" text-anchor="middle" fill="#fb7185" font-size="13">10.54% U sót viền</text>
 
     <!-- Cell [1, 1] : TP Pixels -->
     <rect x="295" y="225" width="180" height="160" rx="10" fill="url(#tpPixGrad)" stroke="#9333ea" stroke-width="2" filter="url(#shadow2)"/>
     <text x="315" y="255" fill="#e9d5ff" font-size="12" font-weight="700">TP (Correct Tumor Pixel)</text>
-    <text x="385" y="310" text-anchor="middle" fill="#ffffff" font-size="26" font-weight="800">3,186,412</text>
-    <text x="385" y="350" text-anchor="middle" fill="#d8b4fe" font-size="13" font-weight="600">88.37% Recall u</text>
+    <text x="385" y="310" text-anchor="middle" fill="#ffffff" font-size="26" font-weight="800">3,204,552</text>
+    <text x="385" y="350" text-anchor="middle" fill="#d8b4fe" font-size="13" font-weight="600">89.46% Recall u</text>
   </g>
 
   <!-- Side Metrics Panel -->
@@ -97,7 +97,7 @@
     <!-- Pixel Precision -->
     <g transform="translate(25, 195)">
       <text x="0" y="16" fill="#94a3b8" font-size="13">Độ chuẩn xác Pixel (Precision)</text>
-      <text x="305" y="16" text-anchor="end" fill="#f59e0b" font-size="16" font-weight="800">91.72%</text>
+      <text x="305" y="16" text-anchor="end" fill="#f59e0b" font-size="16" font-weight="800">89.78%</text>
       <rect x="0" y="26" width="305" height="6" rx="3" fill="#334155"/>
       <rect x="0" y="26" width="280" height="6" rx="3" fill="#f59e0b"/>
     </g>
@@ -105,7 +105,7 @@
     <!-- Pixel Recall -->
     <g transform="translate(25, 250)">
       <text x="0" y="16" fill="#94a3b8" font-size="13">Độ bao phủ Pixel U (Recall)</text>
-      <text x="305" y="16" text-anchor="end" fill="#10b981" font-size="16" font-weight="800">88.37%</text>
+      <text x="305" y="16" text-anchor="end" fill="#10b981" font-size="16" font-weight="800">89.46%</text>
       <rect x="0" y="26" width="305" height="6" rx="3" fill="#334155"/>
       <rect x="0" y="26" width="269" height="6" rx="3" fill="#10b981"/>
     </g>
